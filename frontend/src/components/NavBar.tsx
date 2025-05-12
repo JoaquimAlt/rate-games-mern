@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { CgAddR } from "react-icons/cg";
 import { useColorMode } from "./ui/color-mode";
 import { LuMoon, LuSun } from "react-icons/lu";
+import { FaGamepad } from "react-icons/fa6";
 
 export const NavBar = () => {
 
@@ -22,12 +23,19 @@ export const NavBar = () => {
                     }
                 }
             >
-                <Text
-                    fontSize={"24px"}
-                    fontWeight={"bold"}
+
+                <Stack
+                direction={"row"}
+                alignItems={"center"}
                 >
-                    <Link to="/">RateGames</Link>
-                </Text>
+                    <Text
+                        fontSize={"24px"}
+                        fontWeight={"bold"}
+                    >
+                        <Link to="/">RateGames</Link>
+                    </Text>
+                    <FaGamepad color="red" size={30} />
+                </Stack>
 
                 <Stack
                 alignItems={"center"}
