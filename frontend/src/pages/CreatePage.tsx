@@ -1,9 +1,10 @@
 import { useState } from "react"
 import type IRate from "../types/Rate"
-import { Box, Button, Container, Heading, Input, Textarea, VStack } from "@chakra-ui/react";
-import { useColorModeValue } from "../components/ui/color-mode";
+import { Box, Button, Container, Heading, Input, Textarea, VStack, useColorModeValue, useToast, Image, Center } from "@chakra-ui/react";
+
 import { RateStars } from "../components/RateStars";
 import { useRateStore } from "../store/rate";
+import ImageGame from "../components/ImageGame";
 
 export const CreatePage = () => {
 
@@ -21,20 +22,46 @@ export const CreatePage = () => {
 
   const { createRate } = useRateStore();
 
-  const handleAddRate = async() => {
-    const {success, msg} = await createRate(newRate);
+  const toast = useToast();
+
+  const handleAddRate = async () => {
+    const { success, msg } = await createRate(newRate);
     console.log("Succes:", success);
+
+    toast({
+      title: success ? "Avaliação criada com sucesso!" : "Erro ao criar avaliação",
+      description: msg,
+      status: success ? "success" : "error",
+      duration: 3000,
+      isClosable: true,
+      position: "top",
+    })
+
     console.log("Message:", msg);
   }
 
+  const bgInputs = useColorModeValue("gray.100", "blackAlpha.300");
+
   return (
-    <Container maxW={"lg"}>
+    <Container maxW={"600px"}>
       <VStack gap={8}>
-        <Heading as={"h1"} size={"2xl"} textAlign={"center"} mt={20} >
+        <Heading as={"h1"} size={"lg"} textAlign={"center"} mt={20} >
           Fazer nova avaliação
         </Heading>
 
-        <Box w={"full"} bg={useColorModeValue("white", "gray.950")} p={6} rounded={"lg"} shadow={"md"} >
+        <Box
+          w={"full"}
+          bg={useColorModeValue("white", "gray.800")}
+          p={6}
+          rounded={"lg"}
+          shadow={"md"}
+          display={"flex"}
+          justifyContent={"space-around"}
+          alignItems={"start"}
+        >
+
+          <ImageGame rate={newRate} />
+
           <VStack gap={6}>
 
             <Input
@@ -42,7 +69,7 @@ export const CreatePage = () => {
               name="image"
               value={newRate.image}
               onChange={(e) => setNewRate({ ...newRate, image: e.target.value })}
-              variant="outline"
+              bg={bgInputs}
             />
 
             <Input
@@ -50,24 +77,26 @@ export const CreatePage = () => {
               name="game"
               value={newRate.game}
               onChange={(e) => setNewRate({ ...newRate, game: e.target.value })}
-              variant="outline"
+              colorScheme={"white"}
+              bg={bgInputs}
             />
 
-            <RateStars rating={newRate.stars} onRate={handleStarsChange}/> 
+            <RateStars rating={newRate.stars} onRate={handleStarsChange} />
 
-            <Textarea 
+            <Textarea
               placeholder="Comente sobre o jogo..."
               name="comment"
               value={newRate.comment}
               onChange={(e) => setNewRate({ ...newRate, comment: e.target.value })}
-              variant="outline"
+              bg={bgInputs}
             />
 
-            <Button w={"full"} colorPalette={"red"} onClick={handleAddRate}>
+            <Button w={"full"} bgColor="red" color={"white"} onClick={handleAddRate}>
               Enviar Avaliação
             </Button>
 
           </VStack>
+
         </Box>
       </VStack>
     </Container>

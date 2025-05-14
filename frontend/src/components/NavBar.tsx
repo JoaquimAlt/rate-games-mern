@@ -1,13 +1,12 @@
-import { Button, Center, Container, Flex, Stack, Text } from "@chakra-ui/react"
+import { Button, Container, Flex, Stack, Text, useColorMode } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
 import { CgAddR } from "react-icons/cg";
-import { useColorMode } from "./ui/color-mode";
 import { LuMoon, LuSun } from "react-icons/lu";
 import { FaGamepad } from "react-icons/fa6";
 
 export const NavBar = () => {
 
-    const {colorMode, toggleColorMode} = useColorMode();
+    const { colorMode, toggleColorMode } = useColorMode();
 
     return (
         <Container maxW={"1140px"} px={4}>
@@ -25,30 +24,29 @@ export const NavBar = () => {
             >
 
                 <Stack
-                direction={"row"}
-                alignItems={"center"}
+                    direction={"row"}
+                    alignItems={"center"}
                 >
-                    <Text
-                        fontSize={"24px"}
-                        fontWeight={"bold"}
-                    >
-                        <Link to="/">RateGames</Link>
-                    </Text>
+                    <Link to={"/"}>
+                        <Text fontSize={"24px"} fontWeight={"bold"}>
+                            RateGames
+                        </Text>
+                    </Link>
                     <FaGamepad color="red" size={30} />
                 </Stack>
 
                 <Stack
-                alignItems={"center"}
-                gap={"7px"}
-                direction={"row"}
+                    alignItems={"center"}
+                    gap={"7px"}
+                    direction={"row"}
                 >
-                    <Link to="/create">
-                        <Button variant={"subtle"}>
+                    <Link to={"/create"}>
+                        <Button>
                             <CgAddR />
                         </Button>
                     </Link>
-                    <Button variant={"subtle"} onClick={toggleColorMode}>
-                        {colorMode === "light" ? <LuMoon /> : <LuSun/>}
+                    <Button onClick={toggleColorMode}>
+                        {colorMode === "light" ? <LuMoon /> : <LuSun />}
                     </Button>
                 </Stack>
 

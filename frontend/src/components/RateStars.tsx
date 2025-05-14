@@ -14,7 +14,7 @@ export const RateStars: React.FC<Props> = ({ rating, onRate }) => {
           key={star}
           aria-label={`Rate ${star} star`}
           onClick={() => onRate(star)}
-          color={star <= rating ? "red.600" : "gray.300"}
+          color={star <= rating ? "red" : "gray.300"}
           variant="ghost"
           size="lg"
         >
