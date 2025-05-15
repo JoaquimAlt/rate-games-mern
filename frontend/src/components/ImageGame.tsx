@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image,  Box, Spinner, Center } from "@chakra-ui/react";
+import { Image,  Box, Spinner, Center, useColorModeValue } from "@chakra-ui/react";
 import type IRate from '../types/Rate';
 
 import NotImage from "../assets/not-image.png";
@@ -18,7 +18,7 @@ const ImageGame = ({ rate, h = 280, w = 190 }: Props) => {
         <Box
             h={h}
             w={w}
-            bgColor={"gray.900"}
+            bgColor={useColorModeValue("gray.100", "gray.900")}
             display={"flex"}
             justifyContent={"center"}
             alignItems={"center"}
@@ -37,8 +37,8 @@ const ImageGame = ({ rate, h = 280, w = 190 }: Props) => {
                 src={rate.image}
                 alt={rate.game}
                 objectFit="cover"
-                w="100%"
-                h="100%"
+                w={w}
+                h={h}
                 borderRadius="md"
                 onLoad={() => setImgLoading(false)}
                 onError={(e) => {

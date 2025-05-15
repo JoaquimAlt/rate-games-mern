@@ -11,7 +11,7 @@ export const getAllRates = async (req, res) => {
     }
 };
 
-export const  createRate= async (req, res) => {
+export const  createRate = async (req, res) => {
     const rate = req.body;
 
     if(!rate.game || !rate.stars || !rate.comment){
