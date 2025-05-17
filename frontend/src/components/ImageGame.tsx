@@ -37,8 +37,8 @@ const ImageGame = ({ rate, h = 280, w = 190 }: Props) => {
                 src={rate.image}
                 alt={rate.game}
                 objectFit="cover"
-                w={w}
-                h={h}
+                w={"full"}
+                h={"full"}
                 borderRadius="md"
                 onLoad={() => setImgLoading(false)}
                 onError={(e) => {

@@ -1,17 +1,25 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import { Box, useColorModeValue } from '@chakra-ui/react'
 import { HomePage } from './pages/HomePage'
 import { CreatePage } from './pages/CreatePage'
 import { NavBar } from './components/NavBar'
+import LoginPage from './pages/LoginPage'
+import { ProfilePage } from './pages/ProfilePage'
+import RegisterPage from './pages/RegisterPage'
 
 function App() {
+  const location = useLocation();
+  const hideNav = location.pathname === "/login" || location.pathname === "/register";
 
   return (
     <Box minH={"100vh"} bgColor={useColorModeValue("gray.100", "blackAlpha.300")}>
-      <NavBar />
+      {!hideNav && <NavBar />}
       <Routes>
-        <Route path='/' element={<HomePage />} />
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/register' element={<RegisterPage />} />
+        <Route path='/home' element={<HomePage />} />
         <Route path='/create' element={<CreatePage />} />
+        <Route path='/profile' element={<ProfilePage />} />
       </Routes>
     </Box>
   )

@@ -1,10 +1,11 @@
 import { useState } from "react"
 import type IRate from "../types/Rate"
-import { Box, Button, Container, Heading, Input, Textarea, VStack, useColorModeValue, useToast, Image, Center } from "@chakra-ui/react";
+import { Box, Button, Container, Heading, Input, Textarea, VStack, useColorModeValue, useToast} from "@chakra-ui/react";
 
 import { RateStars } from "../components/RateStars";
 import { useRateStore } from "../store/rate";
 import ImageGame from "../components/ImageGame";
+import { useNavigate } from "react-router-dom";
 
 export const CreatePage = () => {
 
@@ -13,6 +14,7 @@ export const CreatePage = () => {
     stars: 0,
     comment: "",
     image: "",
+    user: undefined as unknown as import("mongodb").ObjectId,
   }
   );
 
@@ -23,6 +25,8 @@ export const CreatePage = () => {
   const { createRate } = useRateStore();
 
   const toast = useToast();
+
+  const navigate = useNavigate();
 
   const handleAddRate = async () => {
     const { success, msg } = await createRate(newRate);
@@ -37,8 +41,16 @@ export const CreatePage = () => {
       position: "top",
     })
 
+    if (success) {
+        setTimeout(() => {
+          navigate("/home");
+        }, 1200);
+    }
+
     console.log("Message:", msg);
   }
+
+
 
   const bgInputs = useColorModeValue("gray.100", "blackAlpha.300");
 

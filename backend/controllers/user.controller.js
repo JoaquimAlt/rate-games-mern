@@ -95,3 +95,13 @@ export const loginUser = async (req, res) => {
         res.status(500).json({msg: "Aconteceu um erro no servidor"})
     }
 }
+
+export const getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    res.status(200).json(user);
+  } catch (error) {
+    console.log("Erro ao buscar o usuário:", error.message);
+    res.status(500).json({ msg: "Erro ao buscar o usuário" });
+  }
+};

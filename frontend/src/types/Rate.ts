@@ -6,4 +6,5 @@ export default interface IRate {
     stars: number;
     comment: string;
     image: string;
+    user: Types.ObjectId;
 }

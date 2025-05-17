@@ -4,9 +4,10 @@ import { FaStar } from 'react-icons/fa'
 import { VscKebabVertical } from "react-icons/vsc"
 import { MdEdit, MdDelete } from "react-icons/md"
 import { useRateStore } from '../store/rate'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { RateStars } from './RateStars'
 import ImageGame from './ImageGame'
+import { useUserStore } from '../store/user'
 
 interface Props {
     rate: IRate
@@ -52,6 +53,18 @@ const RateCard = ({ rate }: Props) => {
         })
     };
 
+    const { user, fetchUser } = useUserStore();
+
+    useEffect(() => {
+        fetchUser();    
+    }
+    , [fetchUser]); 
+
+
+    const isOwner = user && typeof rate.user === "object" && rate.user !== null && "username" in rate.user
+        ? (rate.user as { username: string }).username === user.username    
+        : false;
+
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const initialRef = React.useRef(null);
@@ -67,7 +80,7 @@ const RateCard = ({ rate }: Props) => {
             alignItems={"start"}
             h={260}
             minW={"100px"}
-            maxW={"lg"}
+            maxW={"md"}
             gap={8}
             shadow={"md"}
             rounded={"md"}
@@ -77,7 +90,7 @@ const RateCard = ({ rate }: Props) => {
             overflow={"hidden"}
         >
 
-            <ImageGame rate={rate} h={196} w={370} />
+            <ImageGame rate={rate} h={196} w={135}/>
 
             <Box display={"flex"} flexDirection={"column"} marginRight={12} gap={3} textAlign={"start"}>
                 <Heading fontSize={20}>
@@ -85,28 +98,37 @@ const RateCard = ({ rate }: Props) => {
                 </Heading>
                 <HStack gap={1}>
                     {[1, 2, 3, 4, 5].map((star) => (
-                        <FaStar color={star <= rate.stars ? "red" : "gray"} />
+                        <FaStar key={star} color={star <= rate.stars ? "red" : "gray"} />
                     ))}
                 </HStack>
-                <Text as={"p"} noOfLines={4}>
+                <Text maxW={150} as={"p"} noOfLines={4}>
                     {rate.comment}
                 </Text>
             </Box>
 
-            <Box position={"absolute"} right={6}>
-                <Menu>
-                    <MenuButton as={IconButton} icon={<VscKebabVertical />} aria-label='Options' variant={"outline"} />
-                    <MenuList>
-                        <MenuItem onClick={onOpen} icon={<MdEdit />}>
-                            Editar avaliação
-                        </MenuItem>
-                        <MenuDivider />
-                        <MenuItem onClick={() => { rate._id && handleDeleteRate(rate._id.toString()) }} icon={<MdDelete />}>
-                            Excluir avaliação
-                        </MenuItem>
-                    </MenuList>
-                </Menu>
-            </Box>
+            {isOwner &&
+                <Box position={"absolute"} right={6}>
+                    <Menu>
+                        <MenuButton as={IconButton} icon={<VscKebabVertical />} aria-label='Options' variant={"outline"} />
+                        <MenuList>
+                            <MenuItem onClick={onOpen} icon={<MdEdit />}>
+                                Editar avaliação
+                            </MenuItem>
+                            <MenuDivider />
+                            <MenuItem onClick={() => { rate._id && handleDeleteRate(rate._id.toString()) }} icon={<MdDelete />}>
+                                Excluir avaliação
+                            </MenuItem>
+                        </MenuList>
+                    </Menu>
+                </Box>
+            }
+
+            <Text position={"absolute"} bottom={2} right={3} fontSize={12} color={"gray.500"}>
+                Feito por: {" "} 
+                {typeof rate.user === "object" && rate.user !== null && "username" in rate.user
+                    ? (rate.user as { username: string }).username
+                    : ""}
+            </Text>
 
             <Modal
                 initialFocusRef={initialRef}

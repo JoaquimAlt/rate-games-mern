@@ -4,17 +4,21 @@ import { FaStar } from "react-icons/fa"
 import { Link } from "react-router-dom"
 import { useRateStore } from "../store/rate"
 import RateCard from "../components/RateCard"
+import { useUserStore } from "../store/user"
 
-export const HomePage = () => {
+export const ProfilePage = () => {
 
-  const { fetchRates, rates } = useRateStore();
+  const { fetchMyRates, rates } = useRateStore();
+  const { fetchUser, user} = useUserStore();
 
   useEffect(() => {
-    fetchRates();
-  }, [fetchRates]);
+    fetchMyRates();
+    fetchUser();
+  }, [fetchMyRates, fetchUser]);
 
   console.log("Rates:", rates);
-
+  console.log("User:", user);
+  
   return (
     <Container maxW={"smxl"} py={12}>
       <VStack spacing={4}>
@@ -25,7 +29,14 @@ export const HomePage = () => {
             bgGradient={"linear(to-r, red.500, red)"}
             bgClip={"text"}
           >
-            Avaliações recentes
+            Suas avaliações
+          </Text>
+          <Text
+            fontSize={30}
+            fontWeight={"bold"}
+            color={"white"}
+          >
+            {user?.username}
           </Text>
           <FaStar color="red" size={30} />
         </Box>
@@ -42,7 +53,7 @@ export const HomePage = () => {
           w={"full"}
           
         >
-          {rates.slice(0, 3).map((rate) => (
+          {rates.map((rate) => (
             <RateCard key={rate._id?.toString()} rate={rate} />
           ))}
         </SimpleGrid>
