@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import type IRate from "../types/Rate"
 import { Box, Button, Container, Heading, Input, Textarea, VStack, useColorModeValue, useToast} from "@chakra-ui/react";
 
@@ -6,6 +6,7 @@ import { RateStars } from "../components/RateStars";
 import { useRateStore } from "../store/rate";
 import ImageGame from "../components/ImageGame";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../store/user";
 
 export const CreatePage = () => {
 
@@ -43,14 +44,20 @@ export const CreatePage = () => {
 
     if (success) {
         setTimeout(() => {
-          navigate("/home");
+          navigate("/");
         }, 1200);
     }
 
     console.log("Message:", msg);
   }
 
+  const {token} = useUserStore();
 
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [token, navigate]);
 
   const bgInputs = useColorModeValue("gray.100", "blackAlpha.300");
 

@@ -8,7 +8,7 @@ interface UserStore {
     fetchUser: () => Promise<void>;
     login: (email: string, password: string) => Promise<{ success: boolean; msg: string }>;
     register: (username: string, email: string, password: string, confirmPassword: string) => Promise<{ success: boolean; msg: string }>;
-    loggout: () => void;
+    logout: () => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -56,7 +56,7 @@ export const useUserStore = create<UserStore>((set) => ({
 
         return {success: false, msg: data.msg};
     },
-    loggout: () => {
+    logout: () => {
         localStorage.removeItem("token");
         set({user: null, token: ""});
         useRateStore.getState().setRates([]);

@@ -32,7 +32,7 @@ const LoginPage = () => {
 
         if (success) {
             setTimeout(() => {
-                navigate("/home");
+                navigate("/");
             }, 1200);
         }
     };

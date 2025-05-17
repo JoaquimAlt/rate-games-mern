@@ -1,6 +1,6 @@
 import { Container, VStack, Text, Box, SimpleGrid, Center } from "@chakra-ui/react"
 import { useEffect } from "react"
-import { FaStar } from "react-icons/fa"
+import { TbStarsFilled } from "react-icons/tb";
 import { Link } from "react-router-dom"
 import { useRateStore } from "../store/rate"
 import RateCard from "../components/RateCard"
@@ -22,7 +22,7 @@ export const ProfilePage = () => {
   return (
     <Container maxW={"smxl"} py={12}>
       <VStack spacing={4}>
-        <Box display={"flex"} alignItems={"center"} gap={5}>
+        <Box display={"flex"} textAlign={"center"} alignItems={"center"} gap={5}>
           <Text
             fontSize={30}
             fontWeight={"bold"}
@@ -38,7 +38,7 @@ export const ProfilePage = () => {
           >
             {user?.username}
           </Text>
-          <FaStar color="red" size={30} />
+          <TbStarsFilled color="red" size={30} />
         </Box>
 
         <Center>

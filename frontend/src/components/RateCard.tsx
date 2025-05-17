@@ -4,7 +4,7 @@ import { FaStar } from 'react-icons/fa'
 import { VscKebabVertical } from "react-icons/vsc"
 import { MdEdit, MdDelete } from "react-icons/md"
 import { useRateStore } from '../store/rate'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { RateStars } from './RateStars'
 import ImageGame from './ImageGame'
 import { useUserStore } from '../store/user'
@@ -53,13 +53,7 @@ const RateCard = ({ rate }: Props) => {
         })
     };
 
-    const { user, fetchUser } = useUserStore();
-
-    useEffect(() => {
-        fetchUser();    
-    }
-    , [fetchUser]); 
-
+    const { user } = useUserStore();
 
     const isOwner = user && typeof rate.user === "object" && rate.user !== null && "username" in rate.user
         ? (rate.user as { username: string }).username === user.username    

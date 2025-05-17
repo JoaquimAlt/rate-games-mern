@@ -11,7 +11,7 @@ const app = express();
 
 app.use(express.json()); // allow receive JSON in the req.body
 
-app.use("/api/rates", authMiddleware, rateRoutes);
+app.use("/api/rates", rateRoutes);
 
 app.use("/api/users", authRoutes);
 

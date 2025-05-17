@@ -22,7 +22,7 @@ export const useRateStore = create<RateStore>((set) => ({
             return { success: false, msg: "Preencha todos os campos" };
         }
 
-        const res = await fetch("/api/rates/", {
+        const res = await fetch("/api/rates", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Image,  Box, Spinner, Center, useColorModeValue } from "@chakra-ui/react";
+import { Image,  Box, Spinner, useColorModeValue } from "@chakra-ui/react";
 import type IRate from '../types/Rate';
 
 import NotImage from "../assets/not-image.png";
@@ -11,13 +10,12 @@ interface Props {
 }
 
 const ImageGame = ({ rate, h = 280, w = 190 }: Props) => {
-    const [imgError, setImgError] = useState(false);
-    const [imgLoading, setImgLoading] = useState(true);
 
     return (
         <Box
             h={h}
             w={w}
+            minW={120}
             bgColor={useColorModeValue("gray.100", "gray.900")}
             display={"flex"}
             justifyContent={"center"}
@@ -25,28 +23,15 @@ const ImageGame = ({ rate, h = 280, w = 190 }: Props) => {
             borderRadius="md"
             overflow="hidden"
         >
-            {imgLoading && !imgError && (
-                <Box>
-                    <Center>
-                        <Spinner size="md" />
-                    </Center>
-                </Box>
-            )}
-
             <Image
-                src={rate.image}
-                alt={rate.game}
+                src={rate.image || NotImage}
+                fallbackSrc={NotImage}
+                fallback={<Spinner size="md" />}
+                alt={rate.game || "Imagem do jogo"}
                 objectFit="cover"
                 w={"full"}
                 h={"full"}
                 borderRadius="md"
-                onLoad={() => setImgLoading(false)}
-                onError={(e) => {
-                    setImgError(true);
-                    setImgLoading(false);
-                    e.currentTarget.src = NotImage;
-                }}
-                display={imgLoading ? "none" : "block"}
             />
         </Box>
     );

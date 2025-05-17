@@ -39,7 +39,7 @@ const RegisterPage = () => {
 
         if (success) {
             setTimeout(() => {
-                navigate("/home");
+                navigate("/");
             }, 1200);
         }
     };
@@ -104,11 +104,11 @@ const RegisterPage = () => {
                         />
 
                         <Button color={"white"} onClick={handleRegister} bgColor='red' size='lg' width={"full"}>
-                            Entrar
+                            Cadastrar
                         </Button>
 
                         <Text fontSize={"sm"} color={"gray.500"}>
-                            Já possui uma conta? <Link to="/login" style={{ color: "red" }}>Entrar</Link>
+                            Já possui uma conta? <Link to="/login" style={{ color: "red" }}> Entrar</Link>
                         </Text>
                     </VStack>
                 </Box>
