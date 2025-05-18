@@ -19,10 +19,6 @@ export const ProfilePage = () => {
     fetchUser();
   }, [fetchMyRates, fetchUser, order]);
 
-  console.log("Rates:", rates);
-  console.log("User:", user);
-  console.log(order)
-
   const bgColorContainer = useColorModeValue("white", "gray.800");
   
   return (

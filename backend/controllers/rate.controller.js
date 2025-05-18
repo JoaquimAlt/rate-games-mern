@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 export const getAllRates = async (req, res) => {
     try {
-        const rates = await Rate.find().populate("user", "username").sort({createdAt: -1});
+        const rates = await Rate.find().populate("user", "username").sort({createdAt: -1}).limit(3);
         res.status(200).json({success: true, data: rates});
         console.log("Avaliações encontradas com sucesso!", rates);
     } catch (error) {

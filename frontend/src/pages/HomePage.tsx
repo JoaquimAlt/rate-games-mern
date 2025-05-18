@@ -19,9 +19,6 @@ export const HomePage = () => {
     fetchRates();
   }, [fetchRates]);
 
-  console.log("Rates:", popularGames);
-
-
   return (
     <Container maxW={"smxl"} pb={6}>
       <VStack spacing={50}>

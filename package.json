@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node backend/index.js",
-    "dev": "nodemon backend/index.js"
+    "dev": "nodemon backend/index.js",
+    "build": "npm install && npm install --prefix frontend && npm rund build --prefix frontend"
   },
   "keywords": [],
   "author": "",

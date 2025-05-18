@@ -96,7 +96,7 @@ const RateExpanded = ({ rate }: Props) => {
                     maxW={"full"} 
                     wordBreak={"break-word"} 
                     as={"p"} 
-                    color={"gray.300"}
+                    color={useColorModeValue("gray.600", "gray.400")}
                     fontSize={"md"}
                 >
                     {rate.comment}

@@ -62,7 +62,7 @@ const SearchGames = () => {
     const bgColor = useColorModeValue("white", "gray.700");
 
     return (
-        <Container position={"relative"} minW={{ sm: 200, lg: 400 }} maxW={500} ref={wrapperRef}>
+        <Container position={"relative"} minW={{ base: 200, sm: 400 }} maxW={500} ref={wrapperRef}>
             <VStack align="stretch" spacing={2}>
                 <InputGroup>
                     <InputLeftElement>
@@ -108,7 +108,7 @@ const SearchGames = () => {
                                             gap={4}
                                             px={4}
                                             minH={70}
-                                            _hover={{ bg: "gray.100", cursor: "pointer" }}
+                                            _hover={{ bg: "gray.400", cursor: "pointer" }}
                                             onClick={() => handleSelect(game)}
                                         >
                                             <Image
@@ -116,7 +116,7 @@ const SearchGames = () => {
                                                 maxW={70} 
                                                 src={game.background_image} />
 
-                                            <Text maxW={160} fontSize="md" color="white">
+                                            <Text maxW={160} fontSize="md" >
                                                 {game.name}
                                             </Text>
 
