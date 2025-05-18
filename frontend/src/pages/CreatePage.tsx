@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react"
 import type IRate from "../types/Rate"
-import { Box, Button, Container, Heading, Input, Textarea, VStack, useColorModeValue, useToast} from "@chakra-ui/react";
+import { Box, Button, Container, Heading, Textarea, VStack, useColorModeValue, useToast } from "@chakra-ui/react";
 
 import { RateStars } from "../components/RateStars";
 import { useRateStore } from "../store/rate";
 import ImageGame from "../components/ImageGame";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/user";
 
 export const CreatePage = () => {
 
+  const location = useLocation();
+  const { gameName, gameImage } = location.state as { gameName: string; gameImage: string } || { gameName: "", gameImage: "" };
+
+  const {token, user} = useUserStore();
+
   const [newRate, setNewRate] = useState<IRate>({
-    game: "",
+    game: gameName,
     stars: 0,
     comment: "",
-    image: "",
+    image: gameImage,
     user: undefined as unknown as import("mongodb").ObjectId,
   }
   );
@@ -29,9 +34,13 @@ export const CreatePage = () => {
 
   const navigate = useNavigate();
 
+  const [disable, setDisable] = useState(false);
+
   const handleAddRate = async () => {
     const { success, msg } = await createRate(newRate);
     console.log("Succes:", success);
+
+    setDisable(true);
 
     toast({
       title: success ? "Avaliação criada com sucesso!" : "Erro ao criar avaliação",
@@ -43,15 +52,16 @@ export const CreatePage = () => {
     })
 
     if (success) {
-        setTimeout(() => {
-          navigate("/");
-        }, 1200);
+      setTimeout(() => {
+        setDisable(false);
+        navigate("/");
+      }, 1200);
+    } else {
+      setDisable(false);
     }
 
     console.log("Message:", msg);
   }
-
-  const {token} = useUserStore();
 
   useEffect(() => {
     if (!token) {
@@ -59,10 +69,21 @@ export const CreatePage = () => {
     }
   }, [token, navigate]);
 
+  useEffect(() => {
+    setNewRate((prev) => ({
+      ...prev,
+      game: gameName,
+      image: gameImage,
+      comment: "",
+      stars: 0,
+      user: user?._id as unknown as import("mongodb").ObjectId
+    }));
+  }, [gameName, gameImage, user]);
+
   const bgInputs = useColorModeValue("gray.100", "blackAlpha.300");
 
   return (
-    <Container maxW={"600px"}>
+    <Container maxW={"800px"} pb={6}>
       <VStack gap={8}>
         <Heading as={"h1"} size={"lg"} textAlign={"center"} mt={20} >
           Fazer nova avaliação
@@ -75,42 +96,36 @@ export const CreatePage = () => {
           rounded={"lg"}
           shadow={"md"}
           display={"flex"}
-          justifyContent={"space-around"}
-          alignItems={"start"}
+          flexDirection={{base: "column", sm: "row"}}
+          gap={8}
+          justifyContent={"start"}
+          alignItems={"center"}
         >
 
-          <ImageGame rate={newRate} />
+          <ImageGame w={280} h={280} rate={newRate} />
 
-          <VStack gap={6}>
+          <VStack display={"flex"} w={"full"} justifyContent={"end"} gap={8}>
 
-            <Input
-              placeholder="URL da Imagem do Jogo"
-              name="image"
-              value={newRate.image}
-              onChange={(e) => setNewRate({ ...newRate, image: e.target.value })}
-              bg={bgInputs}
-            />
+            <Box display={"flex"} w={"full"} h={280} alignItems={{base: "center", sm: "start"}} flexDirection={"column"} gap={2}>
 
-            <Input
-              placeholder="Nome do Jogo"
-              name="game"
-              value={newRate.game}
-              onChange={(e) => setNewRate({ ...newRate, game: e.target.value })}
-              colorScheme={"white"}
-              bg={bgInputs}
-            />
+              <Heading textAlign={{base: "center", sm: "start"}} fontSize={24}>
+                {newRate.game}
+              </Heading>
 
-            <RateStars rating={newRate.stars} onRate={handleStarsChange} />
+              <RateStars rating={newRate.stars} onRate={handleStarsChange} />
 
-            <Textarea
-              placeholder="Comente sobre o jogo..."
-              name="comment"
-              value={newRate.comment}
-              onChange={(e) => setNewRate({ ...newRate, comment: e.target.value })}
-              bg={bgInputs}
-            />
+              <Textarea
+                placeholder="Comente sobre o jogo..."
+                h={"full"}
+                name="comment"
+                value={newRate.comment}
+                onChange={(e) => setNewRate({ ...newRate, comment: e.target.value })}
+                bg={bgInputs}
+              />
 
-            <Button w={"full"} bgColor="red" color={"white"} onClick={handleAddRate}>
+            </Box>
+
+            <Button isDisabled={disable} w={"full"} bgColor="red" color={"white"} onClick={handleAddRate}>
               Enviar Avaliação
             </Button>
 

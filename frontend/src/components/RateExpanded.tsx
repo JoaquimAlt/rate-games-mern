@@ -1,4 +1,4 @@
-import { Box, HStack, Text, useColorModeValue, Heading, Menu, MenuButton, IconButton, MenuItem, MenuList, MenuDivider, useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, ModalFooter, Button, useDisclosure, VStack, Textarea } from '@chakra-ui/react'
+import { Box, HStack, Text, useColorModeValue, Heading, Menu, MenuButton, IconButton, MenuItem, MenuList, MenuDivider, useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Input, ModalFooter, Button, useDisclosure, VStack, Textarea } from '@chakra-ui/react'
 import type IRate from '../types/Rate'
 import { FaStar } from 'react-icons/fa'
 import { VscKebabVertical } from "react-icons/vsc"
@@ -13,7 +13,7 @@ interface Props {
     rate: IRate
 }
 
-const RateCard = ({ rate }: Props) => {
+const RateExpanded = ({ rate }: Props) => {
 
     const [updatedRate, setUpdatedRate] = useState(rate);
 
@@ -72,22 +72,18 @@ const RateCard = ({ rate }: Props) => {
             display={"flex"}
             flexDirection={"row"}
             alignItems={"start"}
-            h={260}
-            minW={"100px"}
-            maxW={"md"}
+            w={"full"}
+            h={"auto"}
+            pb={8}
             gap={8}
-            shadow={"md"}
-            rounded={"md"}
-            p={8}
-            bgColor={useColorModeValue("white", "gray.800")}
             textAlign={"center"}
             overflow={"hidden"}
         >
 
-            <ImageGame rate={rate} h={196} w={135}/>
+            <ImageGame rate={rate} h={230} w={220}/>
 
-            <Box display={"flex"} flexDirection={"column"} marginRight={12} gap={3} textAlign={"start"}>
-                <Heading fontSize={20}>
+            <Box display={"flex"} flexDirection={"column"} w={"full"} marginRight={12} gap={4} textAlign={"start"}>
+                <Heading wordBreak={"break-all"} fontSize={20}>
                     {rate.game}
                 </Heading>
                 <HStack gap={1}>
@@ -95,21 +91,28 @@ const RateCard = ({ rate }: Props) => {
                         <FaStar key={star} color={star <= rate.stars ? "red" : "gray"} />
                     ))}
                 </HStack>
-                <Text maxW={150} as={"p"} noOfLines={4}>
+                <Text
+                    minW={50} 
+                    maxW={"full"} 
+                    wordBreak={"break-word"} 
+                    as={"p"} 
+                    color={"gray.300"}
+                    fontSize={"md"}
+                >
                     {rate.comment}
                 </Text>
             </Box>
 
             {isOwner &&
-                <Box position={"absolute"} right={6}>
+                <Box position={"absolute"} right={0.5}>
                     <Menu>
                         <MenuButton as={IconButton} icon={<VscKebabVertical />} aria-label='Options' variant={"outline"} />
                         <MenuList>
-                            <MenuItem onClick={onOpen} icon={<MdEdit />}>
+                            <MenuItem onClick={onOpen} icon={<MdEdit size={15} />}>
                                 Editar avaliação
                             </MenuItem>
                             <MenuDivider />
-                            <MenuItem onClick={() => { rate._id && handleDeleteRate(rate._id.toString()) }} icon={<MdDelete />}>
+                            <MenuItem onClick={() => { rate._id && handleDeleteRate(rate._id.toString()) }} icon={<MdDelete size={15} />}>
                                 Excluir avaliação
                             </MenuItem>
                         </MenuList>
@@ -129,32 +132,45 @@ const RateCard = ({ rate }: Props) => {
                 finalFocusRef={finalRef}
                 isOpen={isOpen}
                 onClose={onClose}
-                size={"3xl"}
+                size={"xl"}
             >
                 <ModalOverlay />
                 <ModalContent paddingInline={6}>
                     <ModalHeader textAlign={"center"}>Editar avaliação</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={2}>
-                        <Box display={"flex"} justifyContent={"start"} h={"full"} alignItems={"center"} flexDirection={{base: "column", sm: "row"}} gap={10}>
-                            <ImageGame w={260} rate={updatedRate}/>
-                            <VStack w={"full"} h={"full"} alignItems={{base: "center", sm: "start"}} spacing={6}>
+                        <HStack spacing={10}>
+                            <ImageGame rate={updatedRate} />
+                            <VStack alignItems={"center"} spacing={6}>
 
-                                <Heading textAlign={{base: "center", sm: "start"}} fontSize={24}>{updatedRate.game}</Heading>
-                                
+                                <Input ref={initialRef}
+                                    name='image'
+                                    placeholder='URL da capa do jogo'
+                                    value={updatedRate.image}
+                                    bg={bgInputs}
+                                    onChange={(e) => setUpdatedRate({ ...updatedRate, image: e.target.value })}
+                                />
+
+                                <Input ref={initialRef}
+                                    name='game'
+                                    placeholder='Nome do jogo'
+                                    value={updatedRate.game}
+                                    bg={bgInputs}
+                                    onChange={(e) => setUpdatedRate({ ...updatedRate, game: e.target.value })}
+                                    required={true}
+                                />
+
                                 <RateStars rating={updatedRate.stars} onRate={handleStarsChange} />
 
                                 <Textarea
                                     name='comment'
                                     placeholder='Seu comentário sobre o jogo'
                                     value={updatedRate.comment}
-                                    w={"full"}
-                                    h={40}
                                     bg={bgInputs}
                                     onChange={(e) => setUpdatedRate({ ...updatedRate, comment: e.target.value })}
                                 />
                             </VStack>
-                        </Box>
+                        </HStack>
                     </ModalBody>
 
                     <ModalFooter paddingBlock={6} alignSelf={"end"}>
@@ -176,4 +192,4 @@ const RateCard = ({ rate }: Props) => {
     )
 }
 
-export default RateCard
+export default RateExpanded

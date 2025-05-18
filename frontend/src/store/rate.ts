@@ -9,7 +9,7 @@ interface RateStore {
     fetchRates: () => Promise<void>;
     deleteRate: (rid: string) => Promise<{ success: boolean; msg: string }>;
     updateRate: (rid: string, updatedRate: IRate) => Promise<{ success: boolean; msg: string }>;
-    fetchMyRates: () => Promise<void>;
+    fetchMyRates: (order: string) => Promise<void>;
 }
 
 export const useRateStore = create<RateStore>((set) => ({
@@ -88,10 +88,10 @@ export const useRateStore = create<RateStore>((set) => ({
         set((state) => ({ rates: state.rates.map((rate) => rate._id?.toString() === rid ? data.data : rate) }));
         return { success: true, msg: data.msg }
     },
-    fetchMyRates: async () => {
+    fetchMyRates: async (order: string = "recentes") => {
         const token = useUserStore.getState().token;
 
-        const res = await fetch("/api/rates/myrates", {
+        const res = await fetch(`/api/rates/myrates?order=${order}`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,

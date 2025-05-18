@@ -1,4 +1,4 @@
-import { Image,  Box, Spinner, useColorModeValue } from "@chakra-ui/react";
+import { Image, Box, Spinner, useColorModeValue } from "@chakra-ui/react";
 import type IRate from '../types/Rate';
 
 import NotImage from "../assets/not-image.png";
@@ -15,7 +15,8 @@ const ImageGame = ({ rate, h = 280, w = 190 }: Props) => {
         <Box
             h={h}
             w={w}
-            minW={120}
+            minH={180}
+            minW={130}
             bgColor={useColorModeValue("gray.100", "gray.900")}
             display={"flex"}
             justifyContent={"center"}

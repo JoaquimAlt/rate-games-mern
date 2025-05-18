@@ -31,10 +31,15 @@ export const registerUser = async (req, res) => {
     }
 
     //CHECL IF USER EXISTS
-    const userExists = await User.findOne({email: email})
+    const emailExists = await User.findOne({email: email});
+    const nameExists = await User.findOne({username: username});
 
-    if (userExists) {
+    if (emailExists) {
         return res.status(422).json({msg: "O email já está em uso"})
+    }
+
+    if (nameExists) {
+        return res.status(422).json({msg: `O nome ${username} já está em uso`})
     }
 
     //CREATE PASSWORD

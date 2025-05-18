@@ -105,13 +105,14 @@ export const deleteRate = async (req, res) => {
 
 export const getMyRates = async (req, res) => {
     const userId = req.user._id;
+    const order = req.query.order === "recentes" ? -1 : 1;
 
     if(!userId){
         return res.status(401).json({success: false, msg: "Usuário não autorizado!"});
     }
 
     try {
-        const rates = await Rate.find({user: userId}).populate("user", "username");
+        const rates = await Rate.find({user: userId}).populate("user", "username").sort({updatedAt: order});
         res.status(200).json({success: true, data: rates});
     } catch (error) {
         console.log("Erro ao buscar as avaliações", error.message);

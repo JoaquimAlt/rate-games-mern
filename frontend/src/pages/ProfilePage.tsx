@@ -1,63 +1,90 @@
-import { Container, VStack, Text, Box, SimpleGrid, Center } from "@chakra-ui/react"
-import { useEffect } from "react"
+import { Container, VStack, Text, Box, useColorModeValue, Divider, Button, MenuItem, MenuList, MenuButton, Menu } from "@chakra-ui/react"
+import { useEffect, useState } from "react"
 import { TbStarsFilled } from "react-icons/tb";
 import { Link } from "react-router-dom"
 import { useRateStore } from "../store/rate"
-import RateCard from "../components/RateCard"
 import { useUserStore } from "../store/user"
+import RateExpanded from "../components/RateExpanded";
+import { IoIosArrowDown } from "react-icons/io";
 
 export const ProfilePage = () => {
 
   const { fetchMyRates, rates } = useRateStore();
   const { fetchUser, user} = useUserStore();
 
+  const [ order, setOrder ] = useState("recentes");
+
   useEffect(() => {
-    fetchMyRates();
+    fetchMyRates(order);
     fetchUser();
-  }, [fetchMyRates, fetchUser]);
+  }, [fetchMyRates, fetchUser, order]);
 
   console.log("Rates:", rates);
   console.log("User:", user);
+  console.log(order)
+
+  const bgColorContainer = useColorModeValue("white", "gray.800");
   
   return (
-    <Container maxW={"smxl"} py={12}>
+    <Container  maxW={"smxl"} py={12}>
       <VStack spacing={4}>
-        <Box display={"flex"} textAlign={"center"} alignItems={"center"} gap={5}>
-          <Text
-            fontSize={30}
-            fontWeight={"bold"}
-            bgGradient={"linear(to-r, red.500, red)"}
-            bgClip={"text"}
-          >
-            Suas avaliações
-          </Text>
-          <Text
-            fontSize={30}
-            fontWeight={"bold"}
-            color={"white"}
-          >
-            {user?.username}
-          </Text>
-          <TbStarsFilled color="red" size={30} />
-        </Box>
 
-        <Center>
-        <SimpleGrid
-          marginTop={6}
-          columns={{
-            base: 1,
-            md: 2,
-            lg: 3
-          }}
-          spacing={8}
-          w={"full"}
-          
+        <Box
+            bgColor={bgColorContainer}
+            marginTop={6}
+            display={"flex"}
+            flexDirection={"column"}
+            gap={8}
+            w={"full"}
+            maxW={"container.lg"}
+            p={8}
         >
+          <Box 
+            w={"full"} 
+            display={"flex"} 
+            textAlign={"center"} 
+            flexDirection={{base: "column", md: "row"}}
+            justifyContent={"space-between"} 
+            alignItems={"center"} 
+            gap={5}
+          >
+            <Box display={"flex"} alignItems={"center"} gap={5} fontSize={25}>
+              <Text
+                fontWeight={"bold"}
+                bgGradient={"linear(to-r, red.500, red)"}
+                bgClip={"text"}
+              >
+                Suas avaliações
+              </Text>
+              <Text
+                fontWeight={"semi-bold"}
+                color={useColorModeValue("black", "white")}
+                maxW={220}
+              >
+                {user?.username}
+              </Text>
+              <TbStarsFilled color="red" size={30} />
+            </Box>
+            <Menu>
+              <Box display={"flex"} alignItems={"center"} gap={3}>
+                <Text>Ordenar por:</Text>
+                <MenuButton as={Button} rightIcon={<IoIosArrowDown />} >{order}</MenuButton>
+              </Box>
+              <MenuList>
+                <MenuItem onClick={() => {setOrder("recentes")}}>Recentes</MenuItem>
+                <MenuItem onClick={() => {setOrder("antigas")}}>Antigas</MenuItem>
+              </MenuList>
+            </Menu>
+          </Box>
+          <Divider />
+
           {rates.map((rate) => (
-            <RateCard key={rate._id?.toString()} rate={rate} />
+            <Box key={rate._id?.toString()}>
+              <RateExpanded rate={rate} />
+              <Divider />
+            </Box>
           ))}
-        </SimpleGrid>
-        </Center>
+        </Box>
 
         {rates.length === 0 ? <Text
           display={"flex"}

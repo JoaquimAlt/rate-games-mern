@@ -1,6 +1,5 @@
-import { Box, Button, Container, Flex, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Stack, Text, useColorMode } from "@chakra-ui/react"
+import { Box, Button, Container, Flex, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Stack, Text, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import { Link, useNavigate } from "react-router-dom"
-import { CgAddR } from "react-icons/cg";
 import { LuMoon, LuSun } from "react-icons/lu";
 import { FaGamepad } from "react-icons/fa6";
 import { FaUserCircle } from "react-icons/fa";
@@ -8,12 +7,13 @@ import { useUserStore } from "../store/user";
 import { MdExitToApp } from "react-icons/md";
 import { BsListStars } from "react-icons/bs";
 import { useEffect } from "react";
+import SearchGames from "./SearchGames";
 
 export const NavBar = () => {
 
     const { colorMode, toggleColorMode } = useColorMode();
 
-    const { user, logout, fetchUser} = useUserStore();
+    const { user, logout, fetchUser } = useUserStore();
 
     const navigate = useNavigate();
 
@@ -25,7 +25,9 @@ export const NavBar = () => {
     useEffect(() => {
         fetchUser();
     }
-    , [fetchUser]);
+        , [fetchUser]);
+
+    const bgColor = useColorModeValue("white", "");
 
     return (
         <Container maxW={"1140px"} px={4}>
@@ -37,7 +39,13 @@ export const NavBar = () => {
                 flexDirection={
                     {
                         base: "column",
-                        sm: "row"
+                        md: "row"
+                    }
+                }
+                gap={
+                    {
+                        base: 5,
+                        md: 0
                     }
                 }
             >
@@ -59,26 +67,24 @@ export const NavBar = () => {
                     gap={"7px"}
                     direction={"row"}
                 >
-                    <Button onClick={toggleColorMode}>
-                        {colorMode === "light" ? <LuMoon /> : <LuSun />}
+                    <SearchGames />
+
+                    <Button bgColor={bgColor} onClick={toggleColorMode}>
+                        {colorMode === "light" ? <LuMoon size={25} /> : <LuSun size={25} />}
                     </Button>
-                    {user !== null ?
+                    {user !== null 
+                        ?
                         <Box gap={2} display={"flex"} alignItems={"center"}>
-                            <Link to={"/create"}>
-                                <Button>
-                                    <CgAddR />
-                                </Button>
-                            </Link>
                             <Menu>
-                                <MenuButton leftIcon={<FaUserCircle />} as={Button}>
+                                <MenuButton bgColor={bgColor} leftIcon={<FaUserCircle />} as={Button}>
                                     {user?.username}
                                 </MenuButton>
                                 <MenuList>
-                                    <MenuItem onClick={() => { navigate("/profile") }} icon={<BsListStars />}>
+                                    <MenuItem onClick={() => { navigate("/profile") }} icon={<BsListStars size={18} />}>
                                         Minhas Avaliações
                                     </MenuItem>
                                     <MenuDivider />
-                                    <MenuItem onClick={handleLogout} icon={<MdExitToApp />}>
+                                    <MenuItem onClick={handleLogout} icon={<MdExitToApp size={18} />}>
                                         Sair
                                     </MenuItem>
                                 </MenuList>
@@ -95,5 +101,5 @@ export const NavBar = () => {
 
             </Flex>
         </Container>
-    )
+    );
 }

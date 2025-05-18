@@ -12,7 +12,7 @@ function App() {
   const hideNav = location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <Box minH={"100vh"} bgColor={useColorModeValue("gray.100", "blackAlpha.300")}>
+    <Box minH={"100vh"} bgColor={useColorModeValue("gray.200", "blackAlpha.300")}>
       {!hideNav && <NavBar />}
       <Routes>
         <Route path='/login' element={<LoginPage />} />
