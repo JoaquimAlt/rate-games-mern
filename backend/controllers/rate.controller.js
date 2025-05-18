@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 export const getAllRates = async (req, res) => {
     try {
-        const rates = await Rate.find().populate("user", "username").sort({createdAt: -1}).limit(3);
+        const rates = await Rate.find().populate("user", "username").sort({createdAt: -1});
         res.status(200).json({success: true, data: rates});
         console.log("Avaliações encontradas com sucesso!", rates);
     } catch (error) {
@@ -19,10 +19,15 @@ export const  createRate = async (req, res) => {
         return res.status(400).json({success: false, msg: "Preencha todos os campos para prosseguir!"});
     };
 
-
     const userId = req.user._id;
     if(!userId){
         return res.status(401).json({success: false, msg: "Usuário não autorizado!"});
+    }
+
+    const rateAlreadyExist = await Rate.findOne({user: userId, game: rate.game});
+
+    if (rateAlreadyExist) {
+        return res.status(401).json({success: false, msg: "Você já fez uma avaliação desse jogo"});
     }
 
     const newRate = new Rate({

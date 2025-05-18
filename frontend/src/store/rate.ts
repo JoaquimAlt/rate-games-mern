@@ -37,8 +37,13 @@ export const useRateStore = create<RateStore>((set) => ({
         return { success: true, msg: "Avaliação criada com sucesso" };
     },
     fetchRates: async () => {
+        const token = useUserStore.getState().token;
+
         const res = await fetch("/api/rates", {
             method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
         });
         const data = await res.json();
         set({ rates: data.data });

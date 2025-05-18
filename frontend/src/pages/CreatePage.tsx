@@ -20,7 +20,7 @@ export const CreatePage = () => {
     stars: 0,
     comment: "",
     image: gameImage,
-    user: undefined as unknown as import("mongodb").ObjectId,
+    user: user?._id,
   }
   );
 
@@ -76,7 +76,7 @@ export const CreatePage = () => {
       image: gameImage,
       comment: "",
       stars: 0,
-      user: user?._id as unknown as import("mongodb").ObjectId
+      user: user?._id
     }));
   }, [gameName, gameImage, user]);
 

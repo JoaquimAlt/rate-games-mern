@@ -1,10 +1,8 @@
-import { Types } from "mongoose";
-
 export default interface IRate {
-    _id?: Types.ObjectId;
+    _id?: string;
     game: string;
     stars: number;
     comment: string;
     image: string;
-    user: Types.ObjectId;
+    user?: string;
 }

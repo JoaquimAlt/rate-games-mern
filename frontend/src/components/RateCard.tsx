@@ -50,14 +50,12 @@ const RateCard = ({ rate }: Props) => {
             duration: 3000,
             isClosable: true,
             position: "top",
-        })
+        });
     };
 
     const { user } = useUserStore();
 
-    const isOwner = user && typeof rate.user === "object" && rate.user !== null && "username" in rate.user
-        ? (rate.user as { username: string }).username === user.username    
-        : false;
+    const isOwner = rate.user === user?._id ? true : false;
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -109,7 +107,7 @@ const RateCard = ({ rate }: Props) => {
                                 Editar avaliação
                             </MenuItem>
                             <MenuDivider />
-                            <MenuItem onClick={() => { rate._id && handleDeleteRate(rate._id.toString()) }} icon={<MdDelete />}>
+                            <MenuItem onClick={() => { rate._id && handleDeleteRate(rate._id) }} icon={<MdDelete />}>
                                 Excluir avaliação
                             </MenuItem>
                         </MenuList>
