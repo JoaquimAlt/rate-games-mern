@@ -11,6 +11,8 @@ interface UserStore {
     logout: () => void;
 }
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const useUserStore = create<UserStore>((set) => ({
     user: null,
     token: localStorage.getItem("token"),
@@ -19,7 +21,7 @@ export const useUserStore = create<UserStore>((set) => ({
         await getUser(set, token!);
     },
     login: async (email: string, password: string) => {
-        const res = await fetch("/api/users/login", {
+        const res = await fetch(`${API_URL}/api/users/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -38,7 +40,7 @@ export const useUserStore = create<UserStore>((set) => ({
         return { success: false, msg: data.msg };
     },
     register: async (username: string, email: string, password: string, confirmPassword: string) => {
-        const res = await fetch("api/users/register", {
+        const res = await fetch(`${API_URL}/api/users/register`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -66,7 +68,7 @@ export const useUserStore = create<UserStore>((set) => ({
 
 const getUser = async (set: any, token: string) => {
   try {
-    const res = await fetch("/api/users/me", {
+    const res = await fetch(`${API_URL}/api/users/me`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 

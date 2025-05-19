@@ -12,6 +12,8 @@ interface RateStore {
     fetchMyRates: (order: string) => Promise<void>;
 }
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const useRateStore = create<RateStore>((set) => ({
     rates: [],
     setRates: (rates) => set({ rates }),
@@ -22,7 +24,7 @@ export const useRateStore = create<RateStore>((set) => ({
             return { success: false, msg: "Preencha todos os campos" };
         }
 
-        const res = await fetch("/api/rates", {
+        const res = await fetch(`${API_URL}/api/rates`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -39,7 +41,7 @@ export const useRateStore = create<RateStore>((set) => ({
     fetchRates: async () => {
         const token = useUserStore.getState().token;
 
-        const res = await fetch("/api/rates", {
+        const res = await fetch(`${API_URL}/api/rates`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -51,7 +53,7 @@ export const useRateStore = create<RateStore>((set) => ({
     deleteRate: async (rid: string) => {
         const token = useUserStore.getState().token;
         
-        const res = await fetch(`/api/rates/${rid}`, {
+        const res = await fetch(`${API_URL}/api/rates/${rid}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -70,7 +72,7 @@ export const useRateStore = create<RateStore>((set) => ({
     updateRate: async (rid: string, updatedRate: IRate) => {
         const token = useUserStore.getState().token;
 
-        const res = await fetch(`/api/rates/${rid}`, {
+        const res = await fetch(`${API_URL}/api/rates/${rid}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -91,7 +93,7 @@ export const useRateStore = create<RateStore>((set) => ({
     fetchMyRates: async (order: string = "recentes") => {
         const token = useUserStore.getState().token;
 
-        const res = await fetch(`/api/rates/myrates?order=${order}`, {
+        const res = await fetch(`${API_URL}/api/rates/myrates?order=${order}`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
