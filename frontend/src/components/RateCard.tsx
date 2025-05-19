@@ -21,7 +21,7 @@ const RateCard = ({ rate }: Props) => {
         setUpdatedRate({ ...updatedRate, stars });
     };
 
-    const { updateRate, deleteRate } = useRateStore();
+    const { updateRate, deleteRate, isLoading } = useRateStore();
 
     const toast = useToast();
 
@@ -55,7 +55,9 @@ const RateCard = ({ rate }: Props) => {
 
     const { user } = useUserStore();
 
-    const isOwner = rate.user === user?._id ? true : false;
+    const isOwner = user && typeof rate.user === "object" && rate.user !== null && "username" in rate.user
+        ? (rate.user as { username: string }).username === user.username    
+        : false;
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -101,13 +103,13 @@ const RateCard = ({ rate }: Props) => {
             {isOwner &&
                 <Box position={"absolute"} right={6}>
                     <Menu>
-                        <MenuButton as={IconButton} icon={<VscKebabVertical />} aria-label='Options' variant={"outline"} />
+                        <MenuButton isDisabled={isLoading} as={IconButton} icon={<VscKebabVertical />} aria-label='Options' variant={"outline"} />
                         <MenuList>
-                            <MenuItem onClick={onOpen} icon={<MdEdit />}>
+                            <MenuItem isDisabled={isLoading} onClick={onOpen} icon={<MdEdit />}>
                                 Editar avaliação
                             </MenuItem>
                             <MenuDivider />
-                            <MenuItem onClick={() => { rate._id && handleDeleteRate(rate._id) }} icon={<MdDelete />}>
+                            <MenuItem isDisabled={isLoading} onClick={() => { rate._id && handleDeleteRate(rate._id) }} icon={<MdDelete />}>
                                 Excluir avaliação
                             </MenuItem>
                         </MenuList>
@@ -150,20 +152,24 @@ const RateCard = ({ rate }: Props) => {
                                     h={40}
                                     bg={bgInputs}
                                     onChange={(e) => setUpdatedRate({ ...updatedRate, comment: e.target.value })}
+                                    maxLength={500}
                                 />
                             </VStack>
                         </Box>
                     </ModalBody>
 
                     <ModalFooter paddingBlock={6} alignSelf={"end"}>
-                        <Button onClick={onClose}>Cancel</Button>
+                        <Button isDisabled={isLoading} onClick={onClose}>Cancel</Button>
                         <Button
+                            isLoading={isLoading}
+                            isDisabled={isLoading}
                             color={"white"}
                             bgColor={"red"}
                             ml={3}
                             onClick={() => { rate._id && handleUpdateRate(rate._id.toString(), updatedRate) }}
                             _hover={useColorModeValue({ backgroundColor: "gray", color: "white" },
-                                { backgroundColor: "white", color: "red" })}>
+                                { backgroundColor: "white", color: "red" })}
+                        >
                             Save
                         </Button>
                     </ModalFooter>

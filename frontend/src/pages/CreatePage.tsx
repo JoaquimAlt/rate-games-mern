@@ -28,19 +28,14 @@ export const CreatePage = () => {
     setNewRate({ ...newRate, stars });
   };
 
-  const { createRate } = useRateStore();
+  const { createRate, isLoading } = useRateStore();
 
   const toast = useToast();
 
   const navigate = useNavigate();
 
-  const [disable, setDisable] = useState(false);
-
   const handleAddRate = async () => {
     const { success, msg } = await createRate(newRate);
-    console.log("Succes:", success);
-
-    setDisable(true);
 
     toast({
       title: success ? "Avaliação criada com sucesso!" : "Erro ao criar avaliação",
@@ -51,16 +46,16 @@ export const CreatePage = () => {
       position: "top",
     })
 
-    if (success) {
-      setTimeout(() => {
-        setDisable(false);
-        navigate("/");
-      }, 1200);
-    } else {
-      setDisable(false);
+    if(success){
+      navigate("/");
+      setNewRate({
+        game: "",
+        image: "",
+        comment: "",
+        stars: 0,
+        user: user?._id
+      });
     }
-
-    console.log("Message:", msg);
   }
 
   useEffect(() => {
@@ -121,11 +116,12 @@ export const CreatePage = () => {
                 value={newRate.comment}
                 onChange={(e) => setNewRate({ ...newRate, comment: e.target.value })}
                 bg={bgInputs}
+                maxLength={500}
               />
 
             </Box>
 
-            <Button isDisabled={disable} w={"full"} bgColor="red" color={"white"} onClick={handleAddRate}>
+            <Button isDisabled={isLoading} isLoading={isLoading} w={"full"} bgColor="red" color={"white"} onClick={handleAddRate}>
               Enviar Avaliação
             </Button>
 

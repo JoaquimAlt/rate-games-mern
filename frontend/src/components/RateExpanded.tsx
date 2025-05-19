@@ -21,7 +21,7 @@ const RateExpanded = ({ rate }: Props) => {
         setUpdatedRate({ ...updatedRate, stars });
     };
 
-    const { updateRate, deleteRate } = useRateStore();
+    const { updateRate, deleteRate, isLoading } = useRateStore();
 
     const toast = useToast();
 
@@ -108,11 +108,11 @@ const RateExpanded = ({ rate }: Props) => {
                     <Menu>
                         <MenuButton as={IconButton} icon={<VscKebabVertical />} aria-label='Options' variant={"outline"} />
                         <MenuList>
-                            <MenuItem onClick={onOpen} icon={<MdEdit size={15} />}>
+                            <MenuItem isDisabled={isLoading} onClick={onOpen} icon={<MdEdit size={15} />}>
                                 Editar avaliação
                             </MenuItem>
                             <MenuDivider />
-                            <MenuItem onClick={() => { rate._id && handleDeleteRate(rate._id.toString()) }} icon={<MdDelete size={15} />}>
+                            <MenuItem isDisabled={isLoading} onClick={() => { rate._id && handleDeleteRate(rate._id.toString()) }} icon={<MdDelete size={15} />}>
                                 Excluir avaliação
                             </MenuItem>
                         </MenuList>
@@ -167,6 +167,7 @@ const RateExpanded = ({ rate }: Props) => {
                                     placeholder='Seu comentário sobre o jogo'
                                     value={updatedRate.comment}
                                     bg={bgInputs}
+                                    maxLength={500}
                                     onChange={(e) => setUpdatedRate({ ...updatedRate, comment: e.target.value })}
                                 />
                             </VStack>
@@ -174,8 +175,10 @@ const RateExpanded = ({ rate }: Props) => {
                     </ModalBody>
 
                     <ModalFooter paddingBlock={6} alignSelf={"end"}>
-                        <Button onClick={onClose}>Cancel</Button>
+                        <Button isDisabled={isLoading} onClick={onClose}>Cancel</Button>
                         <Button
+                            isDisabled={isLoading}
+                            isLoading={isLoading}
                             color={"white"}
                             bgColor={"red"}
                             ml={3}

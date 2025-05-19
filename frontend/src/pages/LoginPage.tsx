@@ -10,7 +10,7 @@ const LoginPage = () => {
         password: ""
     });
 
-    const { login } = useUserStore();
+    const { login, isLoading } = useUserStore();
 
     const toast = useToast();
 
@@ -31,9 +31,7 @@ const LoginPage = () => {
         });
 
         if (success) {
-            setTimeout(() => {
-                navigate("/");
-            }, 1200);
+            navigate("/");
         }
     };
 
@@ -77,7 +75,7 @@ const LoginPage = () => {
                             bgColor={bgInputs}
                         />
 
-                        <Button color={"white"} onClick={handleLogin} bgColor='red' size='lg' width={"full"}>
+                        <Button color={"white"} isLoading={isLoading} isDisabled={isLoading} onClick={handleLogin} bgColor='red' size='lg' width={"full"}>
                             Entrar
                         </Button>
 

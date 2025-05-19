@@ -12,7 +12,7 @@ const RegisterPage = () => {
         confirmPassword: ""
     });
 
-    const { register } = useUserStore();
+    const { register, isLoading } = useUserStore();
 
     const toast = useToast();
 
@@ -103,7 +103,7 @@ const RegisterPage = () => {
                             bgColor={bgInputs}
                         />
 
-                        <Button color={"white"} onClick={handleRegister} bgColor='red' size='lg' width={"full"}>
+                        <Button isLoading={isLoading} isDisabled={isLoading} color={"white"} onClick={handleRegister} bgColor='red' size='lg' width={"full"}>
                             Cadastrar
                         </Button>
 
