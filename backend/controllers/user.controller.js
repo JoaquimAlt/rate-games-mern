@@ -10,60 +10,71 @@ const generateToken = (user) => {
 }
 
 export const registerUser = async (req, res) => {
+    const { username, email, password, confirmPassword } = req.body;
 
-    const {username, email, password, confirmPassword} = req.body
+    // Função para validar força da senha
+    const isWeakPassword = (password) => {
+        // Pelo menos 8 caracteres, 1 maiúscula, 1 minúscula, 1 número e 1 símbolo
+        const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return !strongRegex.test(password);
+    };
 
-    //VALIDATION
-    if(!username){
-        return res.status(422).json({msg: "O nome é obrigatorio"})
+    // VALIDATION
+    if (!username) {
+        return res.status(422).json({ msg: "O nome é obrigatório" });
     }
 
-    if(!email){
-        return res.status(422).json({msg: "O email é obrigatorio"})
+    if (!email) {
+        return res.status(422).json({ msg: "O email é obrigatório" });
     }
 
-    if(!password){
-        return res.status(422).json({msg: "A senha é obrigatoria"})
+    if (!password) {
+        return res.status(422).json({ msg: "A senha é obrigatória" });
     }
 
-    if(password !== confirmPassword){
-        return res.status(422).json({msg: "As senhas não batem"})
+    if (password !== confirmPassword) {
+        return res.status(422).json({ msg: "As senhas não batem" });
     }
 
-    //CHECL IF USER EXISTS
-    const emailExists = await User.findOne({email: email});
-    const nameExists = await User.findOne({username: username});
+    if (isWeakPassword(password)) {
+        return res.status(422).json({
+            msg: "A senha é fraca. Use ao menos 8 caracteres, com letra maiúscula, minúscula, número e símbolo.",
+        });
+    }
+
+    // CHECK IF USER EXISTS
+    const emailExists = await User.findOne({ email: email });
+    const nameExists = await User.findOne({ username: username });
 
     if (emailExists) {
-        return res.status(422).json({msg: "O email já está em uso"})
+        return res.status(422).json({ msg: "O email já está em uso" });
     }
 
     if (nameExists) {
-        return res.status(422).json({msg: `O nome ${username} já está em uso`})
+        return res.status(422).json({ msg: `O nome ${username} já está em uso` });
     }
 
-    //CREATE PASSWORD
-    const salt = await bcrypt.genSalt(12)
-    const passwordHash = await bcrypt.hash(password, salt)
+    // CREATE PASSWORD HASH
+    const salt = await bcrypt.genSalt(12);
+    const passwordHash = await bcrypt.hash(password, salt);
 
-    //CREATE USER
+    // CREATE USER
     const user = new User({
         username,
         email,
         password: passwordHash,
-    })
+    });
 
     try {
-
-        const saveUser = await user.save();
-        const token = generateToken(saveUser);
-        res.status(201).json({msg: "Usuario criado", token: token});
-
-    } catch(error) {
-        console.log(error)        
-        res.status(500).json({msg: "Aconteceu um erro no servidor"})
+        const savedUser = await user.save();
+        const token = generateToken(savedUser);
+        res.status(201).json({ msg: "Usuário criado", token: token });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Aconteceu um erro no servidor" });
     }
-}
+};
+
 
 export const loginUser = async (req, res) => {
     const {email, password} = req.body;
