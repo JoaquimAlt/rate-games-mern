@@ -38,9 +38,13 @@ const RegisterPage = () => {
         });
 
         if (success) {
-            setTimeout(() => {
-                navigate("/");
-            }, 1200);
+            navigate("/");
+            setUser({
+                username: "",
+                email: "",
+                password: "",
+                confirmPassword: ""
+            })
         }
     };
 

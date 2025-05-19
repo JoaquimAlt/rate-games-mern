@@ -58,6 +58,8 @@ export const CreatePage = () => {
     }
   }
 
+  console.log(isLoading)
+
   useEffect(() => {
     if (!token) {
       navigate("/login");

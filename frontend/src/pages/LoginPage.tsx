@@ -32,6 +32,10 @@ const LoginPage = () => {
 
         if (success) {
             navigate("/");
+            setUser({
+                email: "",
+                password: ""
+            });
         }
     };
 

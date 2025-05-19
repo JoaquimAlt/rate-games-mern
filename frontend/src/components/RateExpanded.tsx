@@ -1,4 +1,4 @@
-import { Box, HStack, Text, useColorModeValue, Heading, Menu, MenuButton, IconButton, MenuItem, MenuList, MenuDivider, useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Input, ModalFooter, Button, useDisclosure, VStack, Textarea } from '@chakra-ui/react'
+import { Box, HStack, Text, useColorModeValue, Heading, Menu, MenuButton, IconButton, MenuItem, MenuList, MenuDivider, useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, ModalFooter, Button, useDisclosure, VStack, Textarea } from '@chakra-ui/react'
 import type IRate from '../types/Rate'
 import { FaStar } from 'react-icons/fa'
 import { VscKebabVertical } from "react-icons/vsc"
@@ -132,59 +132,47 @@ const RateExpanded = ({ rate }: Props) => {
                 finalFocusRef={finalRef}
                 isOpen={isOpen}
                 onClose={onClose}
-                size={"xl"}
+                size={"3xl"}
             >
                 <ModalOverlay />
                 <ModalContent paddingInline={6}>
                     <ModalHeader textAlign={"center"}>Editar avaliação</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={2}>
-                        <HStack spacing={10}>
-                            <ImageGame rate={updatedRate} />
-                            <VStack alignItems={"center"} spacing={6}>
+                        <Box display={"flex"} justifyContent={"start"} h={"full"} alignItems={"center"} flexDirection={{base: "column", sm: "row"}} gap={10}>
+                            <ImageGame w={260} rate={updatedRate}/>
+                            <VStack w={"full"} h={"full"} alignItems={{base: "center", sm: "start"}} spacing={6}>
 
-                                <Input ref={initialRef}
-                                    name='image'
-                                    placeholder='URL da capa do jogo'
-                                    value={updatedRate.image}
-                                    bg={bgInputs}
-                                    onChange={(e) => setUpdatedRate({ ...updatedRate, image: e.target.value })}
-                                />
-
-                                <Input ref={initialRef}
-                                    name='game'
-                                    placeholder='Nome do jogo'
-                                    value={updatedRate.game}
-                                    bg={bgInputs}
-                                    onChange={(e) => setUpdatedRate({ ...updatedRate, game: e.target.value })}
-                                    required={true}
-                                />
-
+                                <Heading textAlign={{base: "center", sm: "start"}} fontSize={24}>{updatedRate.game}</Heading>
+                                
                                 <RateStars rating={updatedRate.stars} onRate={handleStarsChange} />
 
                                 <Textarea
                                     name='comment'
                                     placeholder='Seu comentário sobre o jogo'
                                     value={updatedRate.comment}
+                                    w={"full"}
+                                    h={40}
                                     bg={bgInputs}
-                                    maxLength={500}
                                     onChange={(e) => setUpdatedRate({ ...updatedRate, comment: e.target.value })}
+                                    maxLength={500}
                                 />
                             </VStack>
-                        </HStack>
+                        </Box>
                     </ModalBody>
 
                     <ModalFooter paddingBlock={6} alignSelf={"end"}>
                         <Button isDisabled={isLoading} onClick={onClose}>Cancel</Button>
                         <Button
-                            isDisabled={isLoading}
                             isLoading={isLoading}
+                            isDisabled={isLoading}
                             color={"white"}
                             bgColor={"red"}
                             ml={3}
                             onClick={() => { rate._id && handleUpdateRate(rate._id.toString(), updatedRate) }}
                             _hover={useColorModeValue({ backgroundColor: "gray", color: "white" },
-                                { backgroundColor: "white", color: "red" })}>
+                                { backgroundColor: "white", color: "red" })}
+                        >
                             Save
                         </Button>
                     </ModalFooter>

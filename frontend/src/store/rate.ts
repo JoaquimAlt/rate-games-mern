@@ -40,7 +40,7 @@ export const useRateStore = create<RateStore>((set) => ({
         const data = await res.json();
         set((state) => ({ rates: [...state.rates, data.data] }));
         set({isLoading: false});
-        return { success: true, msg: "Avaliação criada com sucesso" };
+        return { success: data.success, msg: data.msg };
     },
     fetchRates: async () => {
         const token = useUserStore.getState().token;
