@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5555;
 // CORS
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://rate-games-mern-3o2zx1lvg-joaquimalts-projects.vercel.app"
+  "https://rate-games-mern.vercel.app"
 ];
 app.use(cors({
   origin: allowedOrigins,
