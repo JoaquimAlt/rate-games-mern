@@ -1,7 +1,6 @@
-import express from "express";
-
-import { getAllRates, createRate, updateRate, deleteRate, getMyRates } from "../controllers/rate.controller.js";
-import authMiddleware from "../middleware/auth.js";
+const express = require("express");
+const { getAllRates, createRate, updateRate, deleteRate, getMyRates, updateRatesWithId, getRatesByGame } = require("../controllers/rate.controller.js");
+const authMiddleware = require("../middleware/auth.js");
 
 const router = express.Router();
 
@@ -9,8 +8,12 @@ router.get("/" , getAllRates);
 router.post("/", authMiddleware, createRate);
 router.put("/:id" , authMiddleware, updateRate);
 router.delete("/:id", authMiddleware, deleteRate);
+
 router.get("/myrates", authMiddleware, getMyRates);
 
+router.get("/game", authMiddleware, getRatesByGame);
 
-export default router;
+
+
+module.exports = router;
 

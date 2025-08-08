@@ -1,9 +1,10 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import { connectDB } from "./config/db.js";
-import rateRoutes from "./routes/rate.route.js";
-import authRoutes from "./routes/user.route.js";
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const { connectDB } = require("./config/db.js");
+const rateRoutes = require("./routes/rate.route.js");
+const authRoutes = require("./routes/user.route.js");
+const otpRoutes = require("./routes/otp.route.js");
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://rate-games-mern.vercel.app"
 ];
+
 app.use(cors({
   origin: allowedOrigins,
   credentials: true,
@@ -24,6 +26,7 @@ app.use(express.json());
 
 app.use("/api/rates", rateRoutes);
 app.use("/api/users", authRoutes);
+app.use("/api/otp", otpRoutes);
 
 app.listen(PORT, () => {
   connectDB();

@@ -27,22 +27,24 @@ export const HomePage = () => {
 
         {rates.length === 0
           ?
-          <Text
-            display={"flex"}
-            gap={2}
-            fontSize={18}
-            fontWeight={"bold"}>
-            Nenhuma avaliação encontrada {""}
-            <Link to={"/create"}>
-              <Text
-                as={"span"}
-                bgGradient={"linear(to-r, red.500, red)"}
-                bgClip={"text"}
-                _hover={{ color: "red.300" }}>
-                Registrar avaliação
-              </Text>
-            </Link>
-          </Text>
+          <Box h={100} display={"flex"} alignItems={"center"} textAlign={"center"}>
+            <Text
+              display={"flex"}
+              gap={2}
+              fontSize={18}
+              fontWeight={"bold"}>
+              Nenhuma avaliação encontrada {""}
+              <Link to={"/create"}>
+                <Text
+                  as={"span"}
+                  bgGradient={"linear(to-r, red.500, red)"}
+                  bgClip={"text"}
+                  _hover={{ color: "red.300" }}>
+                  Registrar avaliação
+                </Text>
+              </Link>
+            </Text>
+          </Box>
           :
           <Center display={"flex"} mt={{ base: 20, md: 0 }} flexDirection={"column"} gap={5}>
             <Box display={"flex"} alignItems={"center"} justifyContent={"center"} gap={5}>
@@ -93,7 +95,7 @@ export const HomePage = () => {
                 md: 3,
                 lg: 4
               }}
-              spacing={8}
+              spacing={10}
               w={"full"}
             >
               {isLoading

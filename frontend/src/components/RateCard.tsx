@@ -1,13 +1,13 @@
-import { Box, HStack, Text, useColorModeValue, Heading, Menu, MenuButton, IconButton, MenuItem, MenuList, MenuDivider, useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, ModalFooter, Button, useDisclosure, VStack, Textarea } from '@chakra-ui/react'
+import { Box, HStack, Text, useColorModeValue, Heading, Menu, MenuButton, IconButton, MenuItem, MenuList, MenuDivider, useToast, useDisclosure } from '@chakra-ui/react'
 import type IRate from '../types/Rate'
 import { FaStar } from 'react-icons/fa'
 import { VscKebabVertical } from "react-icons/vsc"
 import { MdEdit, MdDelete } from "react-icons/md"
 import { useRateStore } from '../store/rate'
-import React, { useState } from 'react'
-import { RateStars } from './RateStars'
+import { useState } from 'react'
 import ImageGame from './ImageGame'
 import { useUserStore } from '../store/user'
+import { ModalEditRate } from './ModalEditRate'
 
 interface Props {
     rate: IRate
@@ -16,10 +16,6 @@ interface Props {
 const RateCard = ({ rate }: Props) => {
 
     const [updatedRate, setUpdatedRate] = useState(rate);
-
-    const handleStarsChange = (stars: number) => {
-        setUpdatedRate({ ...updatedRate, stars });
-    };
 
     const { updateRate, deleteRate, isLoading } = useRateStore();
 
@@ -56,15 +52,10 @@ const RateCard = ({ rate }: Props) => {
     const { user } = useUserStore();
 
     const isOwner = user && typeof rate.user === "object" && rate.user !== null && "username" in rate.user
-        ? (rate.user as { username: string }).username === user.username    
+        ? (rate.user as { username: string }).username === user.username
         : false;
 
     const { isOpen, onOpen, onClose } = useDisclosure();
-
-    const initialRef = React.useRef(null);
-    const finalRef = React.useRef(null);
-
-    const bgInputs = useColorModeValue("gray.100", "blackAlpha.300");
 
     return (
         <Box
@@ -84,7 +75,7 @@ const RateCard = ({ rate }: Props) => {
             overflow={"hidden"}
         >
 
-            <ImageGame rate={rate} h={196} w={135}/>
+            <ImageGame rate={rate} h={196} w={135} />
 
             <Box display={"flex"} flexDirection={"column"} marginRight={12} gap={3} textAlign={"start"}>
                 <Heading fontSize={20}>
@@ -118,63 +109,20 @@ const RateCard = ({ rate }: Props) => {
             }
 
             <Text position={"absolute"} bottom={2} right={3} fontSize={12} color={"gray.500"}>
-                Feito por: {" "} 
+                Feito por: {" "}
                 {typeof rate.user === "object" && rate.user !== null && "username" in rate.user
                     ? (rate.user as { username: string }).username
                     : ""}
             </Text>
 
-            <Modal
-                initialFocusRef={initialRef}
-                finalFocusRef={finalRef}
+            <ModalEditRate
                 isOpen={isOpen}
                 onClose={onClose}
-                size={"3xl"}
-            >
-                <ModalOverlay />
-                <ModalContent paddingInline={6}>
-                    <ModalHeader textAlign={"center"}>Editar avaliação</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody pb={2}>
-                        <Box display={"flex"} justifyContent={"start"} h={"full"} alignItems={"center"} flexDirection={{base: "column", sm: "row"}} gap={10}>
-                            <ImageGame w={260} rate={updatedRate}/>
-                            <VStack w={"full"} h={"full"} alignItems={{base: "center", sm: "start"}} spacing={6}>
-
-                                <Heading textAlign={{base: "center", sm: "start"}} fontSize={24}>{updatedRate.game}</Heading>
-                                
-                                <RateStars rating={updatedRate.stars} onRate={handleStarsChange} />
-
-                                <Textarea
-                                    name='comment'
-                                    placeholder='Seu comentário sobre o jogo'
-                                    value={updatedRate.comment}
-                                    w={"full"}
-                                    h={40}
-                                    bg={bgInputs}
-                                    onChange={(e) => setUpdatedRate({ ...updatedRate, comment: e.target.value })}
-                                    maxLength={500}
-                                />
-                            </VStack>
-                        </Box>
-                    </ModalBody>
-
-                    <ModalFooter paddingBlock={6} alignSelf={"end"}>
-                        <Button isDisabled={isLoading} onClick={onClose}>Cancel</Button>
-                        <Button
-                            isLoading={isLoading}
-                            isDisabled={isLoading}
-                            color={"white"}
-                            bgColor={"red"}
-                            ml={3}
-                            onClick={() => { rate._id && handleUpdateRate(rate._id.toString(), updatedRate) }}
-                            _hover={useColorModeValue({ backgroundColor: "gray", color: "white" },
-                                { backgroundColor: "white", color: "red" })}
-                        >
-                            Save
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                isLoading={isLoading}
+                updatedRate={updatedRate}
+                setUpdatedRate={setUpdatedRate}
+                handleUpdateRate={handleUpdateRate}
+            />
 
         </Box>
     )

@@ -1,6 +1,6 @@
-import express from 'express';
-import authMiddleware from "../middleware/auth.js"
-import { getUser, loginUser, registerUser } from '../controllers/user.controller.js';
+const express = require('express');
+const authMiddleware = require("../middleware/auth.js");
+const { getUser, loginUser, registerUser, changePassword } = require('../controllers/user.controller.js');
 
 const router = express.Router();
 
@@ -10,7 +10,10 @@ router.post('/register', registerUser);
 // Rota de login
 router.post('/login', loginUser);
 
-//rota de usuário logado
+// Rota de usuário logado
 router.get('/me', authMiddleware, getUser);
 
-export default router;
+// Rota de alteração de senha
+router.put('/change-password', changePassword);
+
+module.exports = router;

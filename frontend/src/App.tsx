@@ -6,10 +6,16 @@ import { NavBar } from './components/NavBar'
 import LoginPage from './pages/LoginPage'
 import { ProfilePage } from './pages/ProfilePage'
 import RegisterPage from './pages/RegisterPage'
+import { ChangePasswordPage } from './pages/ChangePasswordPage'
+import { ForgotPassPage } from './pages/ForgotPassPage'
+
 
 function App() {
   const location = useLocation();
-  const hideNav = location.pathname === "/login" || location.pathname === "/register";
+  const hideNav = location.pathname === "/login" 
+  || location.pathname === "/register" 
+  || location.pathname === "/forgot"
+  || location.pathname === "/change-password";
 
   return (
     <Box minH={"100vh"} bgColor={useColorModeValue("gray.200", "blackAlpha.300")}>
@@ -20,6 +26,8 @@ function App() {
         <Route path='/' element={<HomePage />} />
         <Route path='/create' element={<CreatePage />} />
         <Route path='/profile' element={<ProfilePage />} />
+        <Route path='/forgot' element={<ForgotPassPage />} />
+        <Route path='/change-password' element={<ChangePasswordPage />} />
       </Routes>
     </Box>
   )

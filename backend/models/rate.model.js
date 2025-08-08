@@ -1,6 +1,11 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
+const { type } = require("os");
 
 const rateSchema = new mongoose.Schema({
+    gameId:{
+        type: String,
+        required: true
+    },
     game:{
         type: String,
         required: true
@@ -30,4 +35,4 @@ const rateSchema = new mongoose.Schema({
 
 const Rate = mongoose.model('Rate', rateSchema);
 
-export default Rate;
+module.exports = Rate;

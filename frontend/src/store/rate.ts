@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type IRate from "../types/Rate";
 import { useUserStore } from "./user";
+import axios from "axios";
 
 interface RateStore {
     rates: IRate[];
@@ -11,6 +12,7 @@ interface RateStore {
     deleteRate: (rid: string) => Promise<{ success: boolean; msg: string }>;
     updateRate: (rid: string, updatedRate: IRate) => Promise<{ success: boolean; msg: string }>;
     fetchMyRates: (order: string) => Promise<void>;
+    fetchRateByGame: (gameId: string) => Promise<void>;
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -21,96 +23,141 @@ export const useRateStore = create<RateStore>((set) => ({
     setRates: (rates) => set({ rates }),
     createRate: async (newRate: IRate) => {
         const token = useUserStore.getState().token;
-        set({isLoading: true});
+        set({ isLoading: true });
 
         if (!newRate.game || !newRate.stars || !newRate.comment || !newRate.image) {
-            set({isLoading: false});
+            set({ isLoading: false });
             return { success: false, msg: "Preencha todos os campos" };
         }
 
-        const res = await fetch(`${API_URL}/api/rates`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(newRate),
-        });
-
-        const data = await res.json();
-        set((state) => ({ rates: [...state.rates, data.data] }));
-        set({isLoading: false});
-        return { success: data.success, msg: data.msg };
+        try {
+            const res = await axios.post(
+                `${API_URL}/api/rates`,
+                newRate,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            set((state) => ({ rates: [...state.rates, res.data.data] }));
+            set({ isLoading: false });
+            return { success: res.data.success, msg: res.data.msg };
+        } catch (error: any) {
+            set({ isLoading: false });
+            return { success: false, msg: error.response?.data?.msg || "Erro ao criar avaliação" };
+        }
     },
     fetchRates: async () => {
         const token = useUserStore.getState().token;
-        set({isLoading: true});
+        set({ isLoading: true });
 
-        const res = await fetch(`${API_URL}/api/rates`, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
-        const data = await res.json();
-        set({ rates: data.data, isLoading: false });
+        try {
+            const res = await axios.get(`${API_URL}/api/rates`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            set({ rates: res.data.data, isLoading: false });
+        } catch {
+            set({ isLoading: false });
+        }
     },
     deleteRate: async (rid: string) => {
         const token = useUserStore.getState().token;
-        set({isLoading: true});
-        
-        const res = await fetch(`${API_URL}/api/rates/${rid}`, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${token}`,
+        set({ isLoading: true });
+
+        try {
+            const res = await axios.delete(`${API_URL}/api/rates/${rid}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (!res.data.success) {
+                set({ isLoading: false });
+                return { success: false, msg: res.data.msg };
             }
-        });
-
-        const data = await res.json();
-        if (!data.success) {
-            set({isLoading: false});
-            return { success: false, msg: data.msg }
+            set((state) => ({
+                rates: state.rates.filter((rate) => rate._id?.toString() !== rid),
+                isLoading: false,
+            }));
+            return { success: true, msg: res.data.msg };
+        } catch (error: any) {
+            set({ isLoading: false });
+            return { success: false, msg: error.response?.data?.msg || "Erro ao deletar avaliação" };
         }
-
-        // update the ui without needing to refresh the page
-        set((state) => ({ rates: state.rates.filter((rate) => rate._id?.toString() !== rid), isLoading: false }));
-        return { success: true, msg: data.msg }
     },
     updateRate: async (rid: string, updatedRate: IRate) => {
         const token = useUserStore.getState().token;
-        set({isLoading: true});
+        set({ isLoading: true });
 
-        const res = await fetch(`${API_URL}/api/rates/${rid}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(updatedRate),
-        });
-
-        const data = await res.json();
-        if (!data.success) {
-            set({isLoading: false});
-            return { success: false, msg: data.msg }
+        try {
+            const res = await axios.put(
+                `${API_URL}/api/rates/${rid}`,
+                updatedRate,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (!res.data.success) {
+                set({ isLoading: false });
+                return { success: false, msg: res.data.msg };
+            }
+            set((state) => ({
+                rates: state.rates.map((rate) =>
+                    rate._id?.toString() === rid ? res.data.data : rate
+                ),
+                isLoading: false,
+            }));
+            return { success: true, msg: res.data.msg };
+        } catch (error: any) {
+            set({ isLoading: false });
+            return { success: false, msg: error.response?.data?.msg || "Erro ao atualizar avaliação" };
         }
-
-        // update the ui without needing to refresh the page
-        set((state) => ({ rates: state.rates.map((rate) => rate._id?.toString() === rid ? data.data : rate), isLoading: false }));
-        return { success: true, msg: data.msg }
     },
     fetchMyRates: async (order: string = "recentes") => {
         const token = useUserStore.getState().token;
-        set({isLoading: true});
+        set({ isLoading: true });
 
-        const res = await fetch(`${API_URL}/api/rates/myrates?order=${order}`, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
-        const data = await res.json();
-        set({ rates: data.data, isLoading: false});
+        try {
+            const res = await axios.get(`${API_URL}/api/rates/myrates?order=${order}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            set({ rates: res.data.data, isLoading: false });
+        } catch (error) {
+            console.log("Erro: " + error);
+            set({ isLoading: false });
+        }
     },
-}
-));
+    fetchRateByGame: async (gameId: string) => {
+        const token = useUserStore.getState().token;
+
+        set({ isLoading: true });
+
+        try {
+            const res = await axios.get(`${API_URL}/api/rates/game`,
+                {
+                    params: {
+                        gameId
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            const fetchedRates = Array.isArray(res.data.data) ? res.data.data : [];
+
+            set({ rates: fetchedRates, isLoading: false });
+        } catch (error) {
+            console.log("Erro: " + error);
+            set({ rates: [], isLoading: false });
+        }
+    }
+}));

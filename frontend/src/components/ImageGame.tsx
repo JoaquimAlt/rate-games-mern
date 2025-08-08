@@ -10,7 +10,6 @@ interface Props {
 }
 
 const ImageGame = ({ rate, h = 280, w = 190 }: Props) => {
-
     return (
         <Box
             h={h}
@@ -23,6 +22,7 @@ const ImageGame = ({ rate, h = 280, w = 190 }: Props) => {
             alignItems={"center"}
             borderRadius="md"
             overflow="hidden"
+            
         >
             <Image
                 src={rate.image || NotImage}

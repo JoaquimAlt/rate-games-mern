@@ -2,6 +2,7 @@ import { Box, Button, Container, Heading, Input, useColorModeValue, useToast, VS
 import React from 'react'
 import { useUserStore } from '../store/user';
 import { Link, useNavigate } from 'react-router-dom';
+import InputPassword from '../components/InputPassword';
 
 const LoginPage = () => {
 
@@ -42,24 +43,30 @@ const LoginPage = () => {
     const bgInputs = useColorModeValue("gray.100", "blackAlpha.300");
 
     return (
-        <Container display={"flex"} flexDirection={"column"} minH={"100vh"}  justifyContent={"center"} maxW={"600px"}>
+        <Container
+            display={"flex"}
+            flexDirection={"column"}
+            minH={"100vh"}
+            justifyContent={"center"}
+            maxW={"600px"}
+        >
             <VStack gap={8}>
-                <Heading    
-                    as={"h1"} 
-                    size={"lg"} 
-                    textAlign={"center"} 
+                <Heading
+                    as={"h1"}
+                    size={"lg"}
+                    textAlign={"center"}
                     bgGradient={"linear(to-r, red.500, red)"}
                     bgClip={"text"}
                 >
                     Página de Login
                 </Heading>
-                <Box 
-                    w={"full"} 
-                    bg={useColorModeValue("white", "gray.800")} 
-                    rounded={"lg"} 
+                <Box
+                    w={"full"}
+                    bg={useColorModeValue("white", "gray.800")}
+                    rounded={"lg"}
                     shadow={"md"}
                 >
-                    <VStack p={8} gap={8}>
+                    <VStack p={8} gap={6}>
                         <Text fontSize={"lg"}>Entre com sua conta</Text>
                         <Input
                             placeholder='Email'
@@ -70,24 +77,38 @@ const LoginPage = () => {
                             bgColor={bgInputs}
                         />
 
-                        <Input
-                            placeholder='Senha'
-                            type='password'
-                            name='password'
-                            value={user.password}
-                            onChange={(e) => setUser({ ...user, password: e.target.value })}
-                            bgColor={bgInputs}
-                        />
+                        <VStack w={"100%"} alignItems={"flex-start"}>
+                            <InputPassword
+                                placeholder='Senha'
+                                name='password'
+                                value={user.password}
+                                onChange={(e) => setUser({ ...user, password: e.target.value })}
+                                bgColor={bgInputs}
+                            />
+                            <Text fontSize={"sm"} color={"red"}>
+                                <Link to="/forgot">
+                                    Esqueci minha senha
+                                </Link>
+                            </Text>
+                        </VStack>
 
-                        <Button color={"white"} isLoading={isLoading} isDisabled={isLoading} onClick={handleLogin} bgColor='red' size='lg' width={"full"}>
+                        <Button
+                            color={"white"}
+                            isLoading={isLoading}
+                            isDisabled={isLoading || user.password.length < 3 || user.email.length < 3}
+                            onClick={handleLogin}
+                            bgColor='red'
+                            size='lg'
+                            width={"full"}
+                        >
                             Entrar
                         </Button>
 
                         <Text fontSize={"sm"} color={"gray.500"}>
                             Não tem uma conta? <Link to="/register" style={{ color: "red" }}>Registrar</Link>
                         </Text>
-                    </VStack> 
-                </Box> 
+                    </VStack>
+                </Box>
             </VStack>
         </Container>
     )

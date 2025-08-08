@@ -15,7 +15,7 @@ import {
     useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-import { useGameStore, type Game } from "../store/game";
+import { useGameStore } from "../store/game";
 import { IoSearchSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
@@ -36,17 +36,14 @@ const SearchGames = () => {
 
     const navigate = useNavigate();
 
-    const handleSelect = (game: Game) => {
+    const { fetchGame } = useGameStore();
+
+    const handleSelect = async (gameId: number) => {
         setSearch("");
         setShowResults(false);
+        await fetchGame(gameId.toString());
         
-        navigate("/create", {
-            state: {
-                gameName: game.name,
-                gameImage: game.background_image,
-            },
-        });
-
+        navigate("/create");
     };
 
     useEffect(() => {
@@ -109,7 +106,7 @@ const SearchGames = () => {
                                             px={4}
                                             minH={70}
                                             _hover={{ bg: "gray.400", cursor: "pointer" }}
-                                            onClick={() => handleSelect(game)}
+                                            onClick={() => handleSelect(game.id)}
                                         >
                                             <Image
                                                 maxH={"85%"}

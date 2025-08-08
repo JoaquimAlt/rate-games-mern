@@ -5,4 +5,6 @@ export default interface IRate {
     comment: string;
     image: string;
     user?: string;
+    gameId: string;
+    createdAt?: string;
 }

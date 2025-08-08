@@ -1,5 +1,5 @@
 import { Box, Button, Image, Spinner, Text, useColorModeValue } from "@chakra-ui/react";
-import type { Game } from '../store/game';
+import { useGameStore, type Game } from '../store/game';
 import { useNavigate } from "react-router-dom";
 import { CgAddR } from "react-icons/cg";
 import NotImage from "../assets/not-image.png";
@@ -12,14 +12,11 @@ const GameCard = ({ game }: Props) => {
 
     const navigate = useNavigate();
 
-    const handleSelect = (game: Game) => {
-        navigate("/create", {
-            state: {
-                gameName: game.name,
-                gameImage: game.background_image,
-            },
-        });
+    const { fetchGame } = useGameStore();
 
+    const handleSelect = async (gameId: number) => {
+        await fetchGame(gameId.toString());
+        navigate("/create");
     };
 
     const bgColor = useColorModeValue("white", "gray.800");
@@ -39,7 +36,7 @@ const GameCard = ({ game }: Props) => {
             shadow={"md"}
         >
 
-            <Button bgColor={bgColor} onClick={() => handleSelect(game)} top={2} right={2} position={"absolute"}>
+            <Button bgColor={bgColor} onClick={() => handleSelect(game.id)} top={2} right={2} position={"absolute"}>
                 <CgAddR />
             </Button>
 

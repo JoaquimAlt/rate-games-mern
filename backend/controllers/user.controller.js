@@ -1,23 +1,16 @@
-import User from "../models/user.model.js";
-import bcrypt from "bcryptjs";
-import jwt from 'jsonwebtoken';
-import dotenv from "dotenv";
+const User = require("../models/user.model.js");
+const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken');
+const dotenv = require("dotenv");
 
 dotenv.config();
 
 const generateToken = (user) => {
-    return jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN})
+    return jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
 }
 
-export const registerUser = async (req, res) => {
+exports.registerUser = async (req, res) => {
     const { username, email, password, confirmPassword } = req.body;
-
-    // Função para validar força da senha
-    const isWeakPassword = (password) => {
-        // Pelo menos 8 caracteres, 1 maiúscula, 1 minúscula, 1 número e 1 símbolo
-        const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        return !strongRegex.test(password);
-    };
 
     // VALIDATION
     if (!username) {
@@ -34,12 +27,6 @@ export const registerUser = async (req, res) => {
 
     if (password !== confirmPassword) {
         return res.status(422).json({ msg: "As senhas não batem" });
-    }
-
-    if (isWeakPassword(password)) {
-        return res.status(422).json({
-            msg: "A senha é fraca. Use ao menos 8 caracteres, com letra maiúscula, minúscula, número e símbolo.",
-        });
     }
 
     // CHECK IF USER EXISTS
@@ -76,48 +63,72 @@ export const registerUser = async (req, res) => {
 };
 
 
-export const loginUser = async (req, res) => {
-    const {email, password} = req.body;
+exports.loginUser = async (req, res) => {
+    const { email, password } = req.body;
 
     //VALIDATION
-    if(!email){
-        return res.status(422).json({msg: "O email é obrigatorio"})
+    if (!email) {
+        return res.status(422).json({ msg: "O email é obrigatorio" })
     }
-    if(!password){
-        return res.status(422).json({msg: "A senha é obrigatoria"})
+    if (!password) {
+        return res.status(422).json({ msg: "A senha é obrigatoria" })
     }
 
     //CHECK IF USER EXISTS
-    const user = await User.findOne({email: email})
+    const user = await User.findOne({ email: email })
 
-    if(!user){
-        return res.status(404).json({msg: "Usuario não encontrado"})
+    if (!user) {
+        return res.status(404).json({ msg: "Usuario não encontrado" })
     }
 
     //CHECK USER PASSWORD
     const checkPassword = await bcrypt.compare(password, user.password)
 
-    if(!checkPassword){
-        return res.status(422).json({msg: "Senha inválida"})
+    if (!checkPassword) {
+        return res.status(422).json({ msg: "Senha inválida" })
     }
 
     try {
 
         const token = generateToken(user);
-        res.status(200).json({msg: "Usuário autenticado com sucesso", token});
+        res.status(200).json({ msg: "Usuário autenticado com sucesso", token });
 
     } catch (error) {
-        console.log(error)        
-        res.status(500).json({msg: "Aconteceu um erro no servidor"})
+        console.log(error)
+        res.status(500).json({ msg: "Aconteceu um erro no servidor" })
     }
 }
 
-export const getUser = async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id).select("-password");
-    res.status(200).json(user);
-  } catch (error) {
-    console.log("Erro ao buscar o usuário:", error.message);
-    res.status(500).json({ msg: "Erro ao buscar o usuário" });
-  }
+exports.getUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select("-password");
+        res.status(200).json(user);
+    } catch (error) {
+        console.log("Erro ao buscar o usuário:", error.message);
+        res.status(500).json({ msg: "Erro ao buscar o usuário" });
+    }
 };
+
+exports.changePassword = async (req, res) => {
+    const { email, newPassword } = req.body;
+    try {
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ succcess: false, msg: "Usuário não encontrado" });
+        }
+
+        // CREATE PASSWORD HASH
+        const salt = await bcrypt.genSalt(12);
+        const newPasswordHash = await bcrypt.hash(newPassword, salt);
+
+        // UPDATE USER PASSWORD
+        user.password = newPasswordHash;
+        await user.save();
+        res.status(200).json({ success: true, msg: "Senha alterada com sucesso!" });
+
+    } catch (error) {
+        console.log("Erro ao alterar a senha:", error.message);
+        res.status(500).json({ success: false, msg: "Erro ao alterar a senha" });
+    }
+}

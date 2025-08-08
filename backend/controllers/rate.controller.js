@@ -1,30 +1,31 @@
-import Rate from "../models/rate.model.js";
-import mongoose from "mongoose";
+const Rate = require("../models/rate.model.js");
+const mongoose = require("mongoose");
+const axios = require("axios");
 
-export const getAllRates = async (req, res) => {
+exports.getAllRates = async (req, res) => {
     try {
         const rates = await Rate.find().populate("user", "username").sort({createdAt: -1});
         res.status(200).json({success: true, data: rates});
-        console.log("Avaliações encontradas com sucesso!", rates);
+        console.log("Avaliações encontradas com sucesso!");
     } catch (error) {
         console.log("Erro ao buscar as avaliações", error.message);
         res.status(500).json({success: false, msg: "Server error!"});
     }
 };
 
-export const  createRate = async (req, res) => {
+exports.createRate = async (req, res) => {
     const rate = req.body;
 
     if(!rate.game || !rate.stars || !rate.comment){
         return res.status(400).json({success: false, msg: "Preencha todos os campos para prosseguir!"});
     };
 
-    const userId = req.user._id;
+    const userId = rate.user;
     if(!userId){
         return res.status(401).json({success: false, msg: "Usuário não autorizado!"});
     }
 
-    const rateAlreadyExist = await Rate.findOne({user: userId, game: rate.game});
+    const rateAlreadyExist = await Rate.findOne({user: userId, gameId: rate.gameId});
 
     if (rateAlreadyExist) {
         return res.status(401).json({success: false, msg: "Você já fez uma avaliação desse jogo"});
@@ -35,19 +36,20 @@ export const  createRate = async (req, res) => {
         stars: rate.stars,
         comment: rate.comment,
         image: rate.image,
-        user: userId
+        user: userId,
+        gameId: rate.gameId
     });
 
     try {
         await newRate.save();
-        res.status(201).json({success: true, data: newRate});
+        res.status(201).json({success: true, msg: "Avaliação registrada com sucesso!", data: newRate});
     } catch (error) {
         console.error("Erro ao criar avalição!");
         res.status(500).json({success: false, msg: "Server error!"});
     }
 };
 
-export const updateRate = async (req, res) => {
+exports.updateRate = async (req, res) => {
     const {id} = req.params;
 
     const userId = req.user._id;
@@ -79,7 +81,7 @@ export const updateRate = async (req, res) => {
 
 };
 
-export const deleteRate = async (req, res) => {
+exports.deleteRate = async (req, res) => {
     const {id} = req.params;
     const userId = req.user._id;
     if(!userId){    
@@ -108,7 +110,7 @@ export const deleteRate = async (req, res) => {
     }
 };
 
-export const getMyRates = async (req, res) => {
+exports.getMyRates = async (req, res) => {
     const userId = req.user._id;
     const order = req.query.order === "recentes" ? -1 : 1;
 
@@ -124,3 +126,21 @@ export const getMyRates = async (req, res) => {
         res.status(500).json({success: false, msg: "Server error!"});
     }
 }
+
+exports.getRatesByGame = async (req, res) => {
+    const {gameId} = req.query;
+    
+    try {
+        const rates = await Rate.find({gameId}).populate("user", "username").sort({createdAt: -1});
+
+        if (rates.length === 0) {
+            res.status(200).json({success: true, msg: "Nenhuma avaliação deste jogo no RateGames"});
+        }
+
+        res.status(200).json({success: true, data: rates});
+        
+    } catch (error) {
+        console.log("Erro ao buscar as avaliações", error.message);
+        res.status(500).json({success: false, msg: "Server error!"});
+    }
+};

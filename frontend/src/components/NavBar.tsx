@@ -13,7 +13,7 @@ export const NavBar = () => {
 
     const { colorMode, toggleColorMode } = useColorMode();
 
-    const { user, logout, fetchUser } = useUserStore();
+    const { user, token, logout, fetchUser } = useUserStore();
 
     const navigate = useNavigate();
 
@@ -24,15 +24,22 @@ export const NavBar = () => {
 
     useEffect(() => {
         fetchUser();
-    }
-        , [fetchUser]);
+
+        if (user === null && token === null) {
+            navigate("/login");
+        }
+
+    }, [user, token, fetchUser]);
 
     const bgColor = useColorModeValue("white", "");
 
     return (
         <Container maxW={"1140px"} px={4}>
             <Flex
-                h={16}
+                h={{
+                        base: "auto",
+                        md: 16
+                    }}
                 alignItems={"center"}
                 justifyContent={"space-between"}
                 padding={"20px"}
@@ -72,7 +79,7 @@ export const NavBar = () => {
                     <Button bgColor={bgColor} onClick={toggleColorMode}>
                         {colorMode === "light" ? <LuMoon size={25} /> : <LuSun size={25} />}
                     </Button>
-                    {user !== null 
+                    {token !== null && user !== null 
                         ?
                         <Box gap={2} display={"flex"} alignItems={"center"}>
                             <Menu>
