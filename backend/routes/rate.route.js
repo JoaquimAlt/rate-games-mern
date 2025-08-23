@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllRates, createRate, updateRate, deleteRate, getMyRates, updateRatesWithId, getRatesByGame } = require("../controllers/rate.controller.js");
+const { getAllRates, createRate, updateRate, deleteRate, getMyRates, updateRatesWithId, getRatesByGame, getGamesWithMoreRates } = require("../controllers/rate.controller.js");
 const authMiddleware = require("../middleware/auth.js");
 
 const router = express.Router();
@@ -12,6 +12,8 @@ router.delete("/:id", authMiddleware, deleteRate);
 router.get("/myrates", authMiddleware, getMyRates);
 
 router.get("/game", authMiddleware, getRatesByGame);
+
+router.get("/games-most-rateds", getGamesWithMoreRates);
 
 
 

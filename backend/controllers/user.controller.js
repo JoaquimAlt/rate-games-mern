@@ -1,4 +1,4 @@
-const User = require("../models/user.model.js");
+const User = require("../models/user.model")
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const dotenv = require("dotenv");
@@ -8,6 +8,8 @@ dotenv.config();
 const generateToken = (user) => {
     return jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
 }
+
+exports.generateToken = generateToken;
 
 exports.registerUser = async (req, res) => {
     const { username, email, password, confirmPassword } = req.body;
@@ -104,7 +106,7 @@ exports.getUser = async (req, res) => {
         const user = await User.findById(req.user._id).select("-password");
         res.status(200).json(user);
     } catch (error) {
-        console.log("Erro ao buscar o usuário:", error.message);
+        console.log("Erro ao buscar o usuário");
         res.status(500).json({ msg: "Erro ao buscar o usuário" });
     }
 };

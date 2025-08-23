@@ -8,14 +8,25 @@ import { ProfilePage } from './pages/ProfilePage'
 import RegisterPage from './pages/RegisterPage'
 import { ChangePasswordPage } from './pages/ChangePasswordPage'
 import { ForgotPassPage } from './pages/ForgotPassPage'
+import LoginWithGoogle from './pages/LoginWithGoogle'
+import { useEffect } from 'react'
+import { useUserStore } from './store/user'
+import PageFooter from './components/PageFooter'
 
 
 function App() {
   const location = useLocation();
-  const hideNav = location.pathname === "/login" 
-  || location.pathname === "/register" 
-  || location.pathname === "/forgot"
-  || location.pathname === "/change-password";
+  const hideNav = location.pathname === "/login"
+    || location.pathname === "/register"
+    || location.pathname === "/forgot"
+    || location.pathname === "/change-password"
+    || location.pathname === "/auth/google/callback";
+
+  const { fetchUser } = useUserStore();
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
 
   return (
     <Box minH={"100vh"} bgColor={useColorModeValue("gray.200", "blackAlpha.300")}>
@@ -28,7 +39,9 @@ function App() {
         <Route path='/profile' element={<ProfilePage />} />
         <Route path='/forgot' element={<ForgotPassPage />} />
         <Route path='/change-password' element={<ChangePasswordPage />} />
+        <Route path="/auth/google/callback" element={<LoginWithGoogle />} />
       </Routes>
+      {!hideNav && <PageFooter />}
     </Box>
   )
 }

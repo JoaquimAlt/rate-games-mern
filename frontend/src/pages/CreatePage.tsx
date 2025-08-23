@@ -10,17 +10,33 @@ import SearchGames from "../components/SearchGames";
 import { useGameStore } from "../store/game";
 import RateExpanded from "../components/RateExpanded";
 import { TbStarsFilled } from "react-icons/tb";
-import { FaStar } from "react-icons/fa";
+import ReactStars from "react-stars";
 
 export const CreatePage = () => {
 
-  const { game } = useGameStore();
+  const { game, fetchGame, gameId } = useGameStore();
 
-  const { token, user } = useUserStore();
+  const { token, user , fetchUser} = useUserStore();
 
   const { createRate, isLoading, fetchRateByGame, rates } = useRateStore();
 
-  const image_not_found =  import.meta.env.VITE_NOT_FOUND_IMG;
+  const toast = useToast();
+
+  const navigate = useNavigate();
+
+  const image_not_found = import.meta.env.VITE_NOT_FOUND_IMG;
+
+  const mediaRates = rates.reduce(
+    (acc: number, rate: IRate) => {
+      return (acc + rate.stars);
+    }, 0) / rates.length;
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [token, navigate]);
+
 
   const [newRate, setNewRate] = useState<IRate>({
     game: game?.name || "",
@@ -36,9 +52,28 @@ export const CreatePage = () => {
     setNewRate({ ...newRate, stars });
   };
 
-  const toast = useToast();
+  // Buscar jogo quando o gameId mudar
+  useEffect(() => {
+    if (gameId) {
+      fetchGame(gameId);
+    }
+  }, [gameId, fetchGame]);
 
-  const navigate = useNavigate();
+  // Atualizar rate e buscar avaliações quando o game mudar
+  useEffect(() => {
+    if (game) {
+      setNewRate((prev) => ({
+        ...prev,
+        game: game.name,
+        image: game.background_image || image_not_found,
+        gameId: game.id.toString(),
+        user: user?._id
+      }));
+
+      fetchRateByGame(game.id.toString());
+      fetchUser();
+    }
+  }, [game, fetchRateByGame]);
 
   const handleAddRate = async () => {
     const { success, msg } = await createRate(newRate);
@@ -64,29 +99,6 @@ export const CreatePage = () => {
       });
     }
   };
-
-  const mediaRates = rates.reduce(
-    (acc: number, rate: IRate) => {
-      return (acc + rate.stars);
-    }, 0) / rates.length;
-
-  useEffect(() => {
-    if (!token) {
-      navigate("/login");
-    }
-  }, [token, navigate]);
-
-  useEffect(() => {
-    if (game) {
-      setNewRate((prev) => ({
-        ...prev,
-        game: game.name,
-        image: game.background_image || image_not_found,
-      }));
-
-      fetchRateByGame(game.id.toString());
-    }
-  }, [game, fetchRateByGame]);
 
   const bgInputs = useColorModeValue("gray.100", "blackAlpha.300");
   const scrollbarStyles = {
@@ -228,11 +240,13 @@ export const CreatePage = () => {
               <HStack alignItems={"flex-end"}>
                 <VStack marginBottom={10}>
                   <Text>5</Text>
-                  <HStack gap={1}>
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <FaStar size={"12px"} key={star} color={"red"} />
-                    ))}
-                  </HStack>
+                  <ReactStars 
+                    size={18}
+                    value={5}
+                    color1="gray"
+                    color2="red"
+                    edit={false}
+                  />
                 </VStack>
                 {Array.isArray(game?.ratings) && game.ratings.length > 0 && (
                   <VStack h="220px" justifyContent={"flex-end"} alignItems={"center"}>
@@ -255,11 +269,13 @@ export const CreatePage = () => {
                 )}
                 <VStack marginBottom={10}>
                   <Text>1</Text>
-                  <HStack gap={1}>
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <FaStar size={"12px"} key={star} color={star === 1 ? "red" : "gray"} />
-                    ))}
-                  </HStack>
+                  <ReactStars 
+                    size={18}
+                    value={1}
+                    color1="gray"
+                    color2="red"
+                    edit={false}
+                  />
                 </VStack>
               </HStack>
             </VStack>
@@ -278,7 +294,13 @@ export const CreatePage = () => {
                 </Text>
                 <HStack gap={1}>
                   <Text>{mediaRates.toFixed(1)}</Text>
-                  
+                  <ReactStars 
+                    size={20}
+                    value={mediaRates}
+                    color1="gray"
+                    color2="red"
+                    edit={false}
+                  />
                 </HStack>
               </HStack>
 
@@ -288,7 +310,13 @@ export const CreatePage = () => {
                 </Text>
                 <HStack alignItems={"center"} gap={1}>
                   <Text>{game.rating.toFixed(1)}</Text>
-                  
+                  <ReactStars 
+                    size={20}
+                    value={game.rating}
+                    color1="gray"
+                    color2="red"
+                    edit={false}
+                  />
                 </HStack>
 
               </HStack>

@@ -3,6 +3,8 @@ import React from 'react'
 import { useUserStore } from '../store/user';
 import { Link, useNavigate } from 'react-router-dom';
 import InputPassword from '../components/InputPassword';
+import { FcGoogle } from "react-icons/fc";
+
 
 const LoginPage = () => {
 
@@ -39,6 +41,12 @@ const LoginPage = () => {
             });
         }
     };
+
+    const API_URL = import.meta.env.VITE_API_URL;
+
+    const handleLoginWithGoogle = () => {
+        window.location.href = `${API_URL}/auth/google`;
+    }
 
     const bgInputs = useColorModeValue("gray.100", "blackAlpha.300");
 
@@ -102,6 +110,15 @@ const LoginPage = () => {
                             width={"full"}
                         >
                             Entrar
+                        </Button>
+
+                        <Button
+                            leftIcon={<FcGoogle />}
+                            size='lg'
+                            width={"full"}
+                            onClick={handleLoginWithGoogle}
+                        >
+                            Entrar com Google
                         </Button>
 
                         <Text fontSize={"sm"} color={"gray.500"}>

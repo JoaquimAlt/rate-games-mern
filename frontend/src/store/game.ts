@@ -11,10 +11,12 @@ export interface Game {
     description_raw: string;
     genres: { id: number; name: string }[];
     rating: number,
-    ratings: {id: number, count: number, percent: number} []
+    ratings: { id: number, count: number, percent: number }[]
+    ratings_count: number
 }
 
 interface GameStore {
+    gameId: string;
     game: Game | null;
     gamesList: Game[];
     popularGames: Game[];
@@ -22,12 +24,14 @@ interface GameStore {
     fetchGames: (query: string) => Promise<void>;
     fetchGame: (id: string) => Promise<void>;
     fetchPopularGames: (page: string) => Promise<void>;
+    setGameId: (gameId: string) => void;
     clearGames: () => void;
 }
 
 const KEY_RAWG = import.meta.env.VITE_KEY_RAWG;
 
 export const useGameStore = create<GameStore>((set) => ({
+    gameId: "",
     game: null,
     gamesList: [],
     popularGames: [],
@@ -42,7 +46,7 @@ export const useGameStore = create<GameStore>((set) => ({
                 `https://api.rawg.io/api/games?search=${query}&key=${KEY_RAWG}`
             );
 
-            set({gamesList: res.data.results, isLoading: false});
+            set({ gamesList: res.data.results, isLoading: false });
 
         } catch (error) {
             console.error("Error fetching games:", error);
@@ -54,7 +58,7 @@ export const useGameStore = create<GameStore>((set) => ({
 
         try {
             const res = await axios.get(
-                `https://api.rawg.io/api/games?key=${KEY_RAWG}&page=${page}&page_size=8&ordering=-metacritic`,
+                `https://api.rawg.io/api/games?key=${KEY_RAWG}&page=${page}&page_size=4&ordering=-metacritic`,
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -62,7 +66,7 @@ export const useGameStore = create<GameStore>((set) => ({
                 }
             );
 
-            set({popularGames: res.data.results, isLoading: false});
+            set({ popularGames: res.data.results, isLoading: false });
 
         } catch (error) {
             console.error("Error fetching games:", error);
@@ -70,19 +74,27 @@ export const useGameStore = create<GameStore>((set) => ({
         }
     },
     fetchGame: async (id: string) => {
-        set({isLoading: true});
+        if (!id) return;
+
+        set((state) => {
+            if (state.game && state.game.id.toString() === id) {
+                return {}; // Já temos o jogo carregado, não faz nada
+            }
+            return { isLoading: true };
+        });
 
         try {
             const res = await axios.get(
                 `https://api.rawg.io/api/games/${id}?key=${KEY_RAWG}`
             );
-
             set({ game: res.data, isLoading: false });
-
         } catch (error) {
             console.error("Error fetching game:", error);
             set({ game: null, isLoading: false });
         }
+    },
+    setGameId: (gameId: string) => {
+        set({ gameId: gameId });
     },
     clearGames: () => {
         set({ gamesList: [], game: null })

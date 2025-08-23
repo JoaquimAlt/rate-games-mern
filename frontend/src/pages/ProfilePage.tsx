@@ -1,4 +1,4 @@
-import { Container, VStack, Text, Box, useColorModeValue, Divider, Button, MenuItem, MenuList, MenuButton, Menu } from "@chakra-ui/react"
+import { Container, VStack, Text, Box, useColorModeValue, Divider, Button, MenuItem, MenuList, MenuButton, Menu, Avatar, HStack } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { TbStarsFilled } from "react-icons/tb";
 import { Link } from "react-router-dom"
@@ -24,6 +24,31 @@ export const ProfilePage = () => {
   return (
     <Container maxW={"smxl"} py={12}>
       <VStack spacing={4}>
+
+        <VStack w={"5xl"} alignItems={"left"} p={8} spacing={10} bgColor={bgColorContainer}>
+          <Text
+            fontWeight={"bold"}
+            bgGradient={"linear(to-r, red.500, red)"}
+            bgClip={"text"}
+            fontSize={25}
+          >
+            Perfil
+          </Text>
+          <HStack spacing={10}>
+            <Avatar name={user?.username} size={"xl"} src={user?.profileImage || undefined} />
+            <VStack alignItems={"flex-start"}>
+              <Text
+                fontWeight={"bold"}
+                fontSize={22}
+              >
+                {user?.username}
+              </Text>
+              <Text color={"gray.500"}>
+                {user?.email}
+              </Text>
+            </VStack>
+          </HStack>
+        </VStack>
 
         <Box
           bgColor={bgColorContainer}
@@ -51,13 +76,6 @@ export const ProfilePage = () => {
                 bgClip={"text"}
               >
                 Suas avaliações
-              </Text>
-              <Text
-                fontWeight={"semi-bold"}
-                color={useColorModeValue("black", "white")}
-                maxW={220}
-              >
-                {user?.username}
               </Text>
               <TbStarsFilled color="red" size={30} />
             </Box>

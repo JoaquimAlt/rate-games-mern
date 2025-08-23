@@ -2,9 +2,11 @@ import { create } from "zustand";
 import type IRate from "../types/Rate";
 import { useUserStore } from "./user";
 import axios from "axios";
+import type IGameMostRated from "../types/GamesMostRateds";
 
 interface RateStore {
     rates: IRate[];
+    gamesMostRateds: IGameMostRated[],
     isLoading: boolean;
     setRates: (rates: IRate[]) => void;
     createRate: (newRate: IRate) => Promise<{ success: boolean; msg: string }>;
@@ -13,12 +15,14 @@ interface RateStore {
     updateRate: (rid: string, updatedRate: IRate) => Promise<{ success: boolean; msg: string }>;
     fetchMyRates: (order: string) => Promise<void>;
     fetchRateByGame: (gameId: string) => Promise<void>;
+    fetchGamesMostRateds: () => Promise<void>;
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const useRateStore = create<RateStore>((set) => ({
     rates: [],
+    gamesMostRateds: [],
     isLoading: false,
     setRates: (rates) => set({ rates }),
     createRate: async (newRate: IRate) => {
@@ -158,6 +162,18 @@ export const useRateStore = create<RateStore>((set) => ({
         } catch (error) {
             console.log("Erro: " + error);
             set({ rates: [], isLoading: false });
+        }
+    },
+    fetchGamesMostRateds: async () => {
+        set({isLoading: true});
+
+        try {
+            const res = await axios.get(`${API_URL}/api/rates/games-most-rateds`);
+
+            set({gamesMostRateds: res.data.data, isLoading: false})
+            
+        } catch (error) {
+            set({isLoading: false});
         }
     }
 }));

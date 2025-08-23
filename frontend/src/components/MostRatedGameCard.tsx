@@ -1,23 +1,23 @@
-import { Box, HStack, Text, VStack } from "@chakra-ui/react";
-import { useGameStore, type Game } from '../store/game';
-import { useNavigate } from "react-router-dom";
-import ReactStars from "react-stars";
+import { Box, HStack, Text, VStack } from '@chakra-ui/react'
+import type IGameMostRated from '../types/GamesMostRateds'
+import ReactStars from 'react-stars';
+import { useGameStore } from '../store/game';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
-    game: Game;
+    game: IGameMostRated
 }
 
-const GameCard = ({ game }: Props) => {
+export const MostRatedGameCard = ({ game }: Props) => {
 
     const navigate = useNavigate();
 
     const { setGameId } = useGameStore();
 
-    const handleSelect = (gameId: number) => {
-        setGameId(gameId.toString());
+    const handleSelect = (gameId: string) => {
+        setGameId(gameId);
         navigate("/create");
     };
-
 
     return (
         <VStack>
@@ -25,37 +25,35 @@ const GameCard = ({ game }: Props) => {
                 w={300}
                 h={260}
                 color="white"
-                bgImage={`linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.3)), url(${game.background_image})`}
+                bgImage={`linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.3)), url(${game.image})`}
                 bgSize="cover"
                 bgPosition="center"
                 display="flex"
                 flexDirection="column"
                 justifyContent="flex-end"
                 gap={4}
-                onClick={() => handleSelect(game.id)}
                 borderRadius={5}
+                onClick={() => handleSelect(game._id)}
+                cursor={"pointer"}
             >
                 <VStack alignItems={"flex-start"} p={5}>
                     <Text
                         fontWeight={"bold"}
                         noOfLines={2}
                     >
-                        {game.name}
+                        {game.game}
                     </Text>
                     <HStack>
                         <ReactStars
-                            value={game.rating}
+                            value={game.stars}
                             color2='red'
                             size={20}
                             edit={false}
                         />
-                        <Text fontSize={12}>({game.ratings_count})</Text>
+                        <Text fontSize={12}>({game.count})</Text>
                     </HStack>
-                    <Text fontSize={12} color={"gray.400"}>{game.released}</Text>
                 </VStack>
             </Box>
         </VStack>
     )
 }
-
-export default GameCard

@@ -8,6 +8,7 @@ import { SimpleCarousel } from "../components/SimpleCarousel";
 import { useGameStore } from "../store/game";
 import GameCard from "../components/GameCard";
 import PaginationCarousel from "../components/PaginationCarousel";
+import { MostRatesGames } from "./MostRatesGames";
 
 export const HomePage = () => {
 
@@ -75,6 +76,8 @@ export const HomePage = () => {
           </Center>
         }
 
+        <MostRatesGames />
+
         <Center display={"flex"} flexDirection={"column"} gap={5} marginTop={10}>
           <Box display={"flex"} alignItems={"center"} justifyContent={"center"} gap={5}>
             <Text
@@ -99,7 +102,7 @@ export const HomePage = () => {
               w={"full"}
             >
               {isLoading
-                ? Array.from({ length: 8 }).map((_, i) => (
+                ? Array.from({ length: 4 }).map((_, i) => (
                   <Skeleton key={i} w={300} h={280} borderRadius={5} />
                 ))
                 : popularGames.map((game) => (

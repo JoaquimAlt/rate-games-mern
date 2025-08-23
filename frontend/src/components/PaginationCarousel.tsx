@@ -27,7 +27,7 @@ const PaginationCarousel = () => {
                 value={page} 
                 onChange={(e) => {
                     let value = Number(e.target.value);
-                    value = Math.max(1, Math.min(50, value));
+                    value = Math.max(1, Math.min(100, value));
                     setPage(value);
                 }}
             />
@@ -36,7 +36,7 @@ const PaginationCarousel = () => {
             aria-label='back' 
             icon={<IoIosArrowForward />} 
             onClick={() => setPage(page + 1)}
-            isDisabled={page >= 50}
+            isDisabled={page >= 100}
         />
 
     </HStack>

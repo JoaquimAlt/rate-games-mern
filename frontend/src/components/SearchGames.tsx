@@ -36,13 +36,12 @@ const SearchGames = () => {
 
     const navigate = useNavigate();
 
-    const { fetchGame } = useGameStore();
+    const { setGameId } = useGameStore();
 
-    const handleSelect = async (gameId: number) => {
+    const handleSelect = (gameId: number) => {
         setSearch("");
         setShowResults(false);
-        await fetchGame(gameId.toString());
-        
+        setGameId(gameId.toString());
         navigate("/create");
     };
 

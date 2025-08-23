@@ -1,4 +1,4 @@
-import { Box, HStack, Text, useColorModeValue, Heading, Menu, MenuButton, IconButton, MenuItem, MenuList, MenuDivider, useToast, useDisclosure } from '@chakra-ui/react'
+import { Box, HStack, Text, useColorModeValue, Heading, Menu, MenuButton, IconButton, MenuItem, MenuList, MenuDivider, useToast, useDisclosure, Avatar } from '@chakra-ui/react'
 import type IRate from '../types/Rate'
 import { FaStar } from 'react-icons/fa'
 import { VscKebabVertical } from "react-icons/vsc"
@@ -108,12 +108,30 @@ const RateCard = ({ rate }: Props) => {
                 </Box>
             }
 
-            <Text position={"absolute"} bottom={2} right={3} fontSize={12} color={"gray.500"}>
-                Feito por: {" "}
-                {typeof rate.user === "object" && rate.user !== null && "username" in rate.user
-                    ? (rate.user as { username: string }).username
-                    : ""}
-            </Text>
+            <HStack position={"absolute"} bottom={2} right={3}>
+                <Text fontSize={12} color={"gray.500"}>
+                    Feito por: {" "}
+                </Text>
+                <Avatar
+                    name={
+                        typeof rate.user === "object" && rate.user !== null && "username" in rate.user
+                            ? (rate.user as { username: string }).username
+                            : ""
+                    }
+                    src={
+                        typeof rate.user === "object" && rate.user !== null && "profileImage" in rate.user
+                            ? (rate.user as { profileImage?: string }).profileImage
+                            : undefined
+                    }
+
+                    size={"xs"}
+                />
+                <Text fontSize={12}>
+                    {typeof rate.user === "object" && rate.user !== null && "username" in rate.user
+                        ? (rate.user as { username: string }).username
+                        : ""}
+                </Text>
+            </HStack>
 
             <ModalEditRate
                 isOpen={isOpen}

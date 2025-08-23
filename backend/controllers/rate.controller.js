@@ -4,9 +4,8 @@ const axios = require("axios");
 
 exports.getAllRates = async (req, res) => {
     try {
-        const rates = await Rate.find().populate("user", "username").sort({createdAt: -1});
+        const rates = await Rate.find().populate("user", "username profileImage").sort({createdAt: -1});
         res.status(200).json({success: true, data: rates});
-        console.log("Avaliações encontradas com sucesso!");
     } catch (error) {
         console.log("Erro ao buscar as avaliações", error.message);
         res.status(500).json({success: false, msg: "Server error!"});
@@ -119,7 +118,7 @@ exports.getMyRates = async (req, res) => {
     }
 
     try {
-        const rates = await Rate.find({user: userId}).populate("user", "username").sort({updatedAt: order});
+        const rates = await Rate.find({user: userId}).populate("user", "username profileImage").sort({updatedAt: order});
         res.status(200).json({success: true, data: rates});
     } catch (error) {
         console.log("Erro ao buscar as avaliações", error.message);
@@ -131,16 +130,46 @@ exports.getRatesByGame = async (req, res) => {
     const {gameId} = req.query;
     
     try {
-        const rates = await Rate.find({gameId}).populate("user", "username").sort({createdAt: -1});
+        const rates = await Rate.find({gameId}).populate("user", "username profileImage").sort({createdAt: -1});
 
         if (rates.length === 0) {
-            res.status(200).json({success: true, msg: "Nenhuma avaliação deste jogo no RateGames"});
+            return res.status(200).json({success: true, msg: "Nenhuma avaliação deste jogo no RateGames"});
         }
 
         res.status(200).json({success: true, data: rates});
         
     } catch (error) {
-        console.log("Erro ao buscar as avaliações", error.message);
+        console.log("Erro ao buscar as avaliações");
         res.status(500).json({success: false, msg: "Server error!"});
     }
 };
+
+exports.getGamesWithMoreRates = async (req, res) => {
+    const {limit} = req.query;
+    const limitNumber = parseInt(limit) || 4;
+
+    try {
+        const rates = await Rate.aggregate([
+            {
+                $group: {
+                    _id: "$gameId",
+                    game: { $first: "$game" },
+                    count: { $sum: 1 },
+                    image: { $first: "$image" },
+                    stars: { $avg: "$stars" }
+                }
+            },
+            {
+                $sort: { count: -1 }
+            },
+            {
+                $limit: limitNumber
+            }
+        ]);
+
+        res.status(200).json({success: true, data: rates});
+    } catch (error) {
+        console.log("Erro ao buscar jogos com mais avaliações", error.message);
+        res.status(500).json({success: false, msg: "Server error!"});
+    }
+}

@@ -1,4 +1,4 @@
-import { Box, Button, Container, Flex, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Stack, Text, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import { Avatar, Box, Button, Container, Flex, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Stack, Text, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import { Link, useNavigate } from "react-router-dom"
 import { LuMoon, LuSun } from "react-icons/lu";
 import { FaGamepad } from "react-icons/fa6";
@@ -6,14 +6,13 @@ import { FaUserCircle } from "react-icons/fa";
 import { useUserStore } from "../store/user";
 import { MdExitToApp } from "react-icons/md";
 import { BsListStars } from "react-icons/bs";
-import { useEffect } from "react";
 import SearchGames from "./SearchGames";
 
 export const NavBar = () => {
 
     const { colorMode, toggleColorMode } = useColorMode();
 
-    const { user, token, logout, fetchUser } = useUserStore();
+    const { user, token, logout } = useUserStore();
 
     const navigate = useNavigate();
 
@@ -21,15 +20,6 @@ export const NavBar = () => {
         logout();
         navigate("/login");
     }
-
-    useEffect(() => {
-        fetchUser();
-
-        if (user === null && token === null) {
-            navigate("/login");
-        }
-
-    }, [user, token, fetchUser]);
 
     const bgColor = useColorModeValue("white", "");
 
@@ -83,8 +73,11 @@ export const NavBar = () => {
                         ?
                         <Box gap={2} display={"flex"} alignItems={"center"}>
                             <Menu>
-                                <MenuButton bgColor={bgColor} leftIcon={<FaUserCircle />} as={Button}>
-                                    {user?.username}
+                                <MenuButton bgColor={bgColor} as={Button}>
+                                    <HStack>
+                                        <Avatar name={user.username} size={"xs"} src={user.profileImage || undefined} />
+                                        <Text>{user.username}</Text>
+                                    </HStack>
                                 </MenuButton>
                                 <MenuList>
                                     <MenuItem onClick={() => { navigate("/profile") }} icon={<BsListStars size={18} />}>
