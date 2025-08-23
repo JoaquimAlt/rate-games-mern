@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 const images = [
   "https://guildtag.com/images/landing/minecraft-banner-1.jpg",
   "https://gmedia.playstation.com/is/image/SIEPDC/the-crew-motorfest-hero-banner-desktop-01-en-30may23?$native$",
-  "https://platform.polygon.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/11526335/smash_illo.jpg?quality=90&strip=all&crop=2.59375,0,94.8125,100"
+  "https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2025/04/donkey-kong-bananza-4310754.jpg?tf=3840x",
+  "https://www.qualbert.com/wp-content/uploads/2022/03/Divider.png"
 ];
 
 export const SimpleCarousel = () => {

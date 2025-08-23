@@ -63,7 +63,7 @@ const RateCard = ({ rate }: Props) => {
             display={"flex"}
             flexDirection={"row"}
             alignItems={"start"}
-            h={260}
+            h={{base: 280, md: 260}}
             minW={"100px"}
             maxW={"md"}
             gap={8}

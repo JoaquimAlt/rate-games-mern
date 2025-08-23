@@ -9,6 +9,8 @@ import { useGameStore } from "../store/game";
 import GameCard from "../components/GameCard";
 import PaginationCarousel from "../components/PaginationCarousel";
 import { MostRatesGames } from "./MostRatesGames";
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 
 export const HomePage = () => {
 
@@ -19,6 +21,25 @@ export const HomePage = () => {
   useEffect(() => {
     fetchRates();
   }, [fetchRates]);
+
+  const responsive = {
+  superLargeDesktop: {
+    breakpoint: { max: 4000, min: 1280 },
+    items: 3,
+  },
+  desktop: {
+    breakpoint: { max: 1280, min: 990 },
+    items: 2,
+  },
+  tablet: {
+    breakpoint: { max: 990, min: 768 },
+    items: 2,
+  },
+  mobile: {
+    breakpoint: { max: 768, min: 0 },
+    items: 1,
+  },
+};
 
   return (
     <Container maxW={"smxl"} pb={6}>
@@ -59,20 +80,23 @@ export const HomePage = () => {
               </Text>
               <TbStarsFilled color="red" size={30} />
             </Box>
-            <SimpleGrid
-              columns={{
-                base: 1,
-                md: 2,
-                lg: 3
-              }}
-              spacing={8}
-              w={"full"}
 
-            >
-              {rates.slice(0, 3).map((rate) => (
-                <RateCard key={rate._id?.toString()} rate={rate} />
-              ))}
-            </SimpleGrid>
+            <Box w="full" maxW={{base: "360px", md: "850px", lg: "1000px", xl: "1500px"}}>
+              <Carousel
+                responsive={responsive}
+                infinite={false}
+                autoPlay={false}
+                keyBoardControl={true}
+                containerClass="carousel-container"
+              >
+                {rates.slice(0, 6).map((rate) => (
+                  <Box key={rate._id?.toString()} p={2}>
+                    <RateCard rate={rate} />
+                  </Box>
+                ))}
+              </Carousel>
+            </Box>
+
           </Center>
         }
 
@@ -95,7 +119,7 @@ export const HomePage = () => {
             <SimpleGrid
               columns={{
                 base: 1,
-                md: 3,
+                md: 2,
                 lg: 4
               }}
               spacing={10}

@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 export default function PageFooter() {
     return (
         <footer>
-            <HStack color={"white"} alignItems={"flex-start"} spacing={40} justifyContent={"center"} w={"full"} p={10} mt={40} bgGradient={"linear(to-r, red.500, red)"}>
+            <HStack color={"white"} alignItems={"flex-start"} spacing={{base: 0, lg: 40}} justifyContent={{base: "space-around", lg: "center"}} w={"full"} p={10} mt={40} bgGradient={"linear(to-r, red.500, red)"}>
                 <VStack alignItems={"flex-start"}>
                     <HStack>
                         <Text fontSize={22} fontWeight={"bold"}>RateGames</Text>

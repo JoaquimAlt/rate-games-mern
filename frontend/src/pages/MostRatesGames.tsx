@@ -1,4 +1,4 @@
-import { Box, HStack, Text, VStack } from '@chakra-ui/react'
+import { Box, HStack, SimpleGrid, Skeleton, Text, VStack } from '@chakra-ui/react'
 import { FaGamepad } from "react-icons/fa6";
 import { useRateStore } from '../store/rate';
 import { useEffect } from 'react';
@@ -29,13 +29,27 @@ export const MostRatesGames = () => {
                     <FaGamepad color="red" size={30} />
                 </HStack>
             </Box>
-            <HStack spacing={10}>
-                { gamesMostRateds.length > 0 &&
+
+            <SimpleGrid
+                columns={{
+                    base: 1,
+                    md: 2,
+                    lg: 4
+                }}
+                spacing={8}
+                w={"full"}
+            >
+                {gamesMostRateds.length > 0 ?
                     gamesMostRateds.map((game) => (
                         <MostRatedGameCard key={game._id} game={game} />
                     ))
+                    :
+                    Array.from({ length: 4 }).map((_, i) => (
+                        <Skeleton key={i} w={300} h={280} borderRadius={5} />
+                    ))
                 }
-            </HStack>
+            </SimpleGrid>
+
         </VStack>
     )
 }

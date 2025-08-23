@@ -262,7 +262,7 @@ export const CreatePage = () => {
                           dataKey="id"
                         />
                         <Tooltip />
-                        <Bar dataKey="count" fill="red" radius={[5, 5, 0, 0]} isAnimationActive={false} />
+                        <Bar dataKey="count" fill="red" radius={[5, 5, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </VStack>
