@@ -22,35 +22,55 @@ Rate Games MERN é uma aplicação full stack que permite que usuários avaliem 
 - **MongoDB** & **Mongoose** – Banco de dados NoSQL
 - **JWT (JSON Web Token)** – Autenticação e segurança
 - **bcryptjs** – Criptografia de senhas
+- **Google Oauth2** - Autenticação com conta google
+- **NodeMailer** - Envio de código pde recuperação de senha por Email
 
 ### 💻 Frontend
 - **React.js** com **TypeScript**
 - **Chakra UI** – Componentes estilizados prontos e acessíveis
-- **Fetch** – Requisições HTTP
+- **Axios** – Requisições HTTP
 - **React Router** – Rotas protegidas e navegação
 
 ---
 
-# Previews do projeto
-## Home Page 🏠
-### Dark mode 🌙
-![home](https://github.com/user-attachments/assets/d905b412-5b79-4279-834f-a38cfdc0736b)
+## Instalação:
+```bash
 
-### Light mode ☀️
-![home-l](https://github.com/user-attachments/assets/c3b3bc58-6c42-4cb2-aba6-b8424b47b923)
+# clone o repositorio do projeto
+git clone https://github.com/JoaquimAlt/rate-games-mern
 
-### Section - Melhores pelo metacritics 🏆
-![home-s](https://github.com/user-attachments/assets/a412cd89-cfd0-49fc-84e9-5c2b40124b73)
+# entre na pasta criada
+cd rate-games-mern
 
+# instalar dependencias backend
+# /rate-games-mern
+# ou
+# /rate-games-mern/backend
+npm build
 
-## Profile Page 👤
-![profile](https://github.com/user-attachments/assets/1c12d385-602b-4b92-9ddb-e4f2b009796c)
+# instalar depedencias frontend
+cd frontend
+npm intall
 
-## Login Page 🔐
-![login](https://github.com/user-attachments/assets/266c44eb-feeb-4719-84aa-70e5a98926db)
+```
 
-## Register Page 📝
-![register]()
+## Execução:
+```bash
+# Rodar a aplicação inteira
+# /rate-games-mern
+npm run dev
+
+# Outra opção é rodar individualmente
+# /rate-games-mern
+cd backend
+npm start
+
+# /rate-games-mern
+cd frontend
+npm run dev
+
+```
+
 
 
 
