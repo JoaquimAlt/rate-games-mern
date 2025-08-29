@@ -17,7 +17,7 @@ const RateCard = ({ rate }: Props) => {
 
     const [updatedRate, setUpdatedRate] = useState(rate);
 
-    const { updateRate, deleteRate, isLoading } = useRateStore();
+    const { updateRate, deleteRate, isLoadingRates } = useRateStore();
 
     const toast = useToast();
 
@@ -94,13 +94,13 @@ const RateCard = ({ rate }: Props) => {
             {isOwner &&
                 <Box position={"absolute"} right={6}>
                     <Menu>
-                        <MenuButton isDisabled={isLoading} as={IconButton} icon={<VscKebabVertical />} aria-label='Options' variant={"outline"} />
+                        <MenuButton isDisabled={isLoadingRates} as={IconButton} icon={<VscKebabVertical />} aria-label='Options' variant={"outline"} />
                         <MenuList>
-                            <MenuItem isDisabled={isLoading} onClick={onOpen} icon={<MdEdit />}>
+                            <MenuItem isDisabled={isLoadingRates} onClick={onOpen} icon={<MdEdit />}>
                                 Editar avaliação
                             </MenuItem>
                             <MenuDivider />
-                            <MenuItem isDisabled={isLoading} onClick={() => { rate._id && handleDeleteRate(rate._id) }} icon={<MdDelete />}>
+                            <MenuItem isDisabled={isLoadingRates} onClick={() => { rate._id && handleDeleteRate(rate._id) }} icon={<MdDelete />}>
                                 Excluir avaliação
                             </MenuItem>
                         </MenuList>
@@ -136,7 +136,7 @@ const RateCard = ({ rate }: Props) => {
             <ModalEditRate
                 isOpen={isOpen}
                 onClose={onClose}
-                isLoading={isLoading}
+                isLoading={isLoadingRates}
                 updatedRate={updatedRate}
                 setUpdatedRate={setUpdatedRate}
                 handleUpdateRate={handleUpdateRate}

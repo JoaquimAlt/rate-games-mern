@@ -11,7 +11,7 @@ export const ForgotPassPage = () => {
 
     const toast = useToast();
 
-    const { sendEmail, isLoading } = useUserStore();
+    const { sendEmail, isLoadingUser } = useUserStore();
 
     const handleSubmit = async (email: string) => {
         const { success, msg } = await sendEmail(email);
@@ -69,8 +69,8 @@ export const ForgotPassPage = () => {
                     bgColor='red'
                     size='lg'
                     width={"full"}
-                    isLoading={isLoading}
-                    isDisabled={isLoading}
+                    isLoading={isLoadingUser}
+                    isDisabled={isLoadingUser}
                     >
                     Enviar código
                 </Button>

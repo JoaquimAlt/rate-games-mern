@@ -19,7 +19,7 @@ export const ChangePasswordPage = () => {
 
   const [isPasswordValid, setIsPasswordValid] = useState(false);
 
-  const { isLoading, verifyOTP, changePassword } = useUserStore();
+  const { isLoadingUser, verifyOTP, changePassword } = useUserStore();
 
   const navigate = useNavigate();
 
@@ -130,8 +130,8 @@ export const ChangePasswordPage = () => {
             bgColor='red'
             size='lg'
             width={"full"}
-            isLoading={isLoading }
-            isDisabled={isLoading || !isPasswordValid}
+            isLoading={isLoadingUser }
+            isDisabled={isLoadingUser || !isPasswordValid}
             onClick={() => handleChangePassword(email, password)}
           >
             Alterar senha
@@ -168,8 +168,8 @@ export const ChangePasswordPage = () => {
             size={'lg'}
             w={"full"}
             onClick={() => handleVerifyOTP(email, otp)}
-            isLoading={isLoading}
-            isDisabled={isLoading || otp.length < 4}
+            isLoading={isLoadingUser}
+            isDisabled={isLoadingUser || otp.length < 4}
           >
             Verificar código
           </Button>

@@ -16,7 +16,7 @@ const RegisterPage = () => {
 
     const [isPasswordValid, setIsPasswordValid] = useState(false);
 
-    const { register, isLoading } = useUserStore();
+    const { register, isLoadingUser } = useUserStore();
 
     const toast = useToast();
 
@@ -129,7 +129,7 @@ const RegisterPage = () => {
                             </Box>
                         }
 
-                        <Button isLoading={isLoading} isDisabled={isLoading || !isPasswordValid} color={"white"} onClick={handleRegister} bgColor='red' size='lg' width={"full"}>
+                        <Button isLoading={isLoadingUser} isDisabled={isLoadingUser || !isPasswordValid} color={"white"} onClick={handleRegister} bgColor='red' size='lg' width={"full"}>
                             Cadastrar
                         </Button>
 
