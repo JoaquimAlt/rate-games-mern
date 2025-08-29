@@ -71,8 +71,27 @@ npm run dev
 
 ```
 
+### Home Page
+<img width="1916" height="904" alt="Image" src="https://github.com/user-attachments/assets/a28e1914-c41d-411b-830c-63e66a6610ed" />
+<br></br>
+<img width="1916" height="904" alt="Image" src="https://github.com/user-attachments/assets/e9e3e0e6-59b4-4153-9c40-51a956930e1d" />
 
+<br></br>
 
+### Login Page
+<img width="1916" height="904" alt="Image" src="https://github.com/user-attachments/assets/c6a9e382-6c1b-4e82-96bb-dd4226ac5095" />
+
+<br></br>
+
+### Create Rate Page
+<img width="1916" height="904" alt="Image" src="https://github.com/user-attachments/assets/1973a477-e93b-45bc-90da-da11c4eb969a" />
+<br></br>
+<img width="1916" height="904" alt="Image" src="https://github.com/user-attachments/assets/2d13a676-86a4-4383-b75c-a00fb7edaf82" />
+
+<br></br>
+
+### Profile Page
+<img width="1916" height="904" alt="Image" src="https://github.com/user-attachments/assets/ac407491-13e0-46e6-a068-19435b9c9881" />
 
 
 
