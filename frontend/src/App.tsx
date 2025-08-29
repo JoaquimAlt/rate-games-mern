@@ -46,7 +46,7 @@ function App() {
         <Route path="/auth/google/callback" element={<LoginWithGoogle />} />
       </Routes>
       {!hideNav && <PageFooter />}
-      <LoadingOverlay isOpen={isLoadingUser && isLoadingRates} />
+      <LoadingOverlay isOpen={isLoadingUser || isLoadingRates} />
     </Box>
   )
 }
