@@ -18,7 +18,7 @@ export const CreatePage = () => {
 
   const { token, user , fetchUser} = useUserStore();
 
-  const { createRate, isLoading, fetchRateByGame, rates } = useRateStore();
+  const { createRate, isLoadingRates, fetchRateByGame, rates } = useRateStore();
 
   const toast = useToast();
 
@@ -204,8 +204,8 @@ export const CreatePage = () => {
               </VStack>
 
               <Button
-                isDisabled={isLoading}
-                isLoading={isLoading}
+                isDisabled={isLoadingRates}
+                isLoading={isLoadingRates}
                 w="full"
                 bgColor="red"
                 color="white"
@@ -231,7 +231,7 @@ export const CreatePage = () => {
             <TbStarsFilled color="red" size={30} />
           </HStack>
           <Divider />
-          <HStack p={8} w={"full"} gap={40} alignItems={"flex-start"} justifyContent={"center"}>
+          <Box display={"flex"} flexDirection={{base: "column", md: "row"}} p={8} w={"full"} gap={{base: 20, md: 40}} alignItems={{base: "center", md: "flex-start"}} justifyContent={"center"}>
             <VStack>
               <Text>
                 Avalições no RAWG.io
@@ -295,6 +295,7 @@ export const CreatePage = () => {
                 <HStack gap={1}>
                   <Text>{mediaRates.toFixed(1)}</Text>
                   <ReactStars 
+
                     size={20}
                     value={mediaRates}
                     color1="gray"
@@ -322,7 +323,7 @@ export const CreatePage = () => {
               </HStack>
 
             </VStack>
-          </HStack>
+          </Box>
         </VStack>
       }
       <Box>

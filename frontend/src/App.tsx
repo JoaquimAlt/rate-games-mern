@@ -12,6 +12,8 @@ import LoginWithGoogle from './pages/LoginWithGoogle'
 import { useEffect } from 'react'
 import { useUserStore } from './store/user'
 import PageFooter from './components/PageFooter'
+import LoadingOverlay from './components/LoadingOverlay'
+import { useRateStore } from './store/rate'
 
 
 function App() {
@@ -22,7 +24,9 @@ function App() {
     || location.pathname === "/change-password"
     || location.pathname === "/auth/google/callback";
 
-  const { fetchUser } = useUserStore();
+  const { fetchUser, isLoadingUser } = useUserStore();
+  const { isLoadingRates } = useRateStore();
+
   useEffect(() => {
     fetchUser();
   }, []);
@@ -42,6 +46,7 @@ function App() {
         <Route path="/auth/google/callback" element={<LoginWithGoogle />} />
       </Routes>
       {!hideNav && <PageFooter />}
+      <LoadingOverlay isOpen={isLoadingUser && isLoadingRates} />
     </Box>
   )
 }

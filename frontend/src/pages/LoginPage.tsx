@@ -13,7 +13,7 @@ const LoginPage = () => {
         password: ""
     });
 
-    const { login, isLoading } = useUserStore();
+    const { login, isLoadingUser } = useUserStore();
 
     const toast = useToast();
 
@@ -102,8 +102,8 @@ const LoginPage = () => {
 
                         <Button
                             color={"white"}
-                            isLoading={isLoading}
-                            isDisabled={isLoading || user.password.length < 3 || user.email.length < 3}
+                            isLoading={isLoadingUser}
+                            isDisabled={isLoadingUser || user.password.length < 3 || user.email.length < 3}
                             onClick={handleLogin}
                             bgColor='red'
                             size='lg'
@@ -117,6 +117,7 @@ const LoginPage = () => {
                             size='lg'
                             width={"full"}
                             onClick={handleLoginWithGoogle}
+                            isLoading={isLoadingUser}
                         >
                             Entrar com Google
                         </Button>

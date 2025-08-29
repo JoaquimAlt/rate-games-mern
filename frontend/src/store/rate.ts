@@ -7,7 +7,7 @@ import type IGameMostRated from "../types/GamesMostRateds";
 interface RateStore {
     rates: IRate[];
     gamesMostRateds: IGameMostRated[],
-    isLoading: boolean;
+    isLoadingRates: boolean;
     setRates: (rates: IRate[]) => void;
     createRate: (newRate: IRate) => Promise<{ success: boolean; msg: string }>;
     fetchRates: () => Promise<void>;
@@ -23,14 +23,14 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const useRateStore = create<RateStore>((set) => ({
     rates: [],
     gamesMostRateds: [],
-    isLoading: false,
+    isLoadingRates: false,
     setRates: (rates) => set({ rates }),
     createRate: async (newRate: IRate) => {
         const token = useUserStore.getState().token;
-        set({ isLoading: true });
+        set({ isLoadingRates: true });
 
         if (!newRate.game || !newRate.stars || !newRate.comment || !newRate.image) {
-            set({ isLoading: false });
+            set({ isLoadingRates: false });
             return { success: false, msg: "Preencha todos os campos" };
         }
 
@@ -46,16 +46,16 @@ export const useRateStore = create<RateStore>((set) => ({
                 }
             );
             set((state) => ({ rates: [...state.rates, res.data.data] }));
-            set({ isLoading: false });
+            set({ isLoadingRates: false });
             return { success: res.data.success, msg: res.data.msg };
         } catch (error: any) {
-            set({ isLoading: false });
+            set({ isLoadingRates: false });
             return { success: false, msg: error.response?.data?.msg || "Erro ao criar avaliação" };
         }
     },
     fetchRates: async () => {
         const token = useUserStore.getState().token;
-        set({ isLoading: true });
+        set({ isLoadingRates: true });
 
         try {
             const res = await axios.get(`${API_URL}/api/rates`, {
@@ -63,14 +63,14 @@ export const useRateStore = create<RateStore>((set) => ({
                     Authorization: `Bearer ${token}`,
                 },
             });
-            set({ rates: res.data.data, isLoading: false });
+            set({ rates: res.data.data, isLoadingRates: false });
         } catch {
-            set({ isLoading: false });
+            set({ isLoadingRates: false });
         }
     },
     deleteRate: async (rid: string) => {
         const token = useUserStore.getState().token;
-        set({ isLoading: true });
+        set({ isLoadingRates: true });
 
         try {
             const res = await axios.delete(`${API_URL}/api/rates/${rid}`, {
@@ -79,22 +79,22 @@ export const useRateStore = create<RateStore>((set) => ({
                 },
             });
             if (!res.data.success) {
-                set({ isLoading: false });
+                set({ isLoadingRates: false });
                 return { success: false, msg: res.data.msg };
             }
             set((state) => ({
                 rates: state.rates.filter((rate) => rate._id?.toString() !== rid),
-                isLoading: false,
+                isLoadingRates: false,
             }));
             return { success: true, msg: res.data.msg };
         } catch (error: any) {
-            set({ isLoading: false });
+            set({ isLoadingRates: false });
             return { success: false, msg: error.response?.data?.msg || "Erro ao deletar avaliação" };
         }
     },
     updateRate: async (rid: string, updatedRate: IRate) => {
         const token = useUserStore.getState().token;
-        set({ isLoading: true });
+        set({ isLoadingRates: true });
 
         try {
             const res = await axios.put(
@@ -108,24 +108,24 @@ export const useRateStore = create<RateStore>((set) => ({
                 }
             );
             if (!res.data.success) {
-                set({ isLoading: false });
+                set({ isLoadingRates: false });
                 return { success: false, msg: res.data.msg };
             }
             set((state) => ({
                 rates: state.rates.map((rate) =>
                     rate._id?.toString() === rid ? res.data.data : rate
                 ),
-                isLoading: false,
+                isLoadingRates: false,
             }));
             return { success: true, msg: res.data.msg };
         } catch (error: any) {
-            set({ isLoading: false });
+            set({ isLoadingRates: false });
             return { success: false, msg: error.response?.data?.msg || "Erro ao atualizar avaliação" };
         }
     },
     fetchMyRates: async (order: string = "recentes") => {
         const token = useUserStore.getState().token;
-        set({ isLoading: true });
+        set({ isLoadingRates: true });
 
         try {
             const res = await axios.get(`${API_URL}/api/rates/myrates?order=${order}`, {
@@ -133,16 +133,16 @@ export const useRateStore = create<RateStore>((set) => ({
                     Authorization: `Bearer ${token}`,
                 },
             });
-            set({ rates: res.data.data, isLoading: false });
+            set({ rates: res.data.data, isLoadingRates: false });
         } catch (error) {
             console.log("Erro: " + error);
-            set({ isLoading: false });
+            set({ isLoadingRates: false });
         }
     },
     fetchRateByGame: async (gameId: string) => {
         const token = useUserStore.getState().token;
 
-        set({ isLoading: true });
+        set({ isLoadingRates: true });
 
         try {
             const res = await axios.get(`${API_URL}/api/rates/game`,
@@ -158,22 +158,22 @@ export const useRateStore = create<RateStore>((set) => ({
 
             const fetchedRates = Array.isArray(res.data.data) ? res.data.data : [];
 
-            set({ rates: fetchedRates, isLoading: false });
+            set({ rates: fetchedRates, isLoadingRates: false });
         } catch (error) {
             console.log("Erro: " + error);
-            set({ rates: [], isLoading: false });
+            set({ rates: [], isLoadingRates: false });
         }
     },
     fetchGamesMostRateds: async () => {
-        set({isLoading: true});
+        set({isLoadingRates: true});
 
         try {
             const res = await axios.get(`${API_URL}/api/rates/games-most-rateds`);
 
-            set({gamesMostRateds: res.data.data, isLoading: false})
+            set({gamesMostRateds: res.data.data, isLoadingRates: false})
             
         } catch (error) {
-            set({isLoading: false});
+            set({isLoadingRates: false});
         }
     }
 }));

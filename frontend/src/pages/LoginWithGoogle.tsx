@@ -62,7 +62,7 @@ const LoginWithGoogle = () => {
 
     return (
         <HStack p={60} width={"full"} height={"full"} display={"flex"} justifyContent={"center"} alignContent={"center"}>
-            <Spinner size="xl" />
+            <Spinner color='red.500' size="xl" />
             <Text>Redirecionando...</Text>
         </HStack>
     )

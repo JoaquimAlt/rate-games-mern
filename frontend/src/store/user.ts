@@ -6,7 +6,7 @@ import axios from "axios";
 interface UserStore {
   user: IUser | null;
   emailOTP: string | null;
-  isLoading: boolean;
+  isLoadingUser: boolean;
   token: string | null;
   fetchUser: () => Promise<void>;
   login: (email: string, password: string) => Promise<{ success: boolean; msg: string }>;
@@ -23,16 +23,16 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const useUserStore = create<UserStore>((set) => ({
   user: null,
   emailOTP: null,
-  isLoading: false,
+  isLoadingUser: false,
   token: localStorage.getItem("token"),
   fetchUser: async () => {
-    set({ isLoading: true });
+    set({ isLoadingUser: true });
     const token = localStorage.getItem("token");
     await getUser(set, token!);
-    set({ isLoading: false });
+    set({ isLoadingUser: false });
   },
   login: async (email: string, password: string) => {
-    set({ isLoading: true });
+    set({ isLoadingUser: true });
     try {
       const res = await axios.post(`${API_URL}/api/users/login`, { email, password }, {
         headers: { "Content-Type": "application/json" }
@@ -40,15 +40,15 @@ export const useUserStore = create<UserStore>((set) => ({
       localStorage.setItem("token", res.data.token);
       set({ token: res.data.token });
       await getUser(set, res.data.token);
-      set({ isLoading: false });
+      set({ isLoadingUser: false });
       return { success: true, msg: "Login realizado com sucesso!" };
     } catch (error: any) {
-      set({ isLoading: false });
+      set({ isLoadingUser: false });
       return { success: false, msg: error.response?.data?.msg || "Erro ao fazer login." };
     }
   },
   register: async (username: string, email: string, password: string, confirmPassword: string) => {
-    set({ isLoading: true });
+    set({ isLoadingUser: true });
     try {
       const res = await axios.post(`${API_URL}/api/users/register`, { username, email, password, confirmPassword }, {
         headers: { "Content-Type": "application/json" }
@@ -56,60 +56,60 @@ export const useUserStore = create<UserStore>((set) => ({
       localStorage.setItem("token", res.data.token);
       set({ token: res.data.token });
       await getUser(set, res.data.token);
-      set({ isLoading: false });
+      set({ isLoadingUser: false });
       return { success: true, msg: res.data.msg };
     } catch (error: any) {
-      set({ isLoading: false });
+      set({ isLoadingUser: false });
       return { success: false, msg: error.response?.data?.msg || "Erro ao registrar." };
     }
   },
   sendEmail: async (email: string) => {
-    set({ isLoading: true });
+    set({ isLoadingUser: true });
 
     try {
       const res = await axios.get(`${API_URL}/api/otp/send`, {
         params: { email }
       });
 
-      set({ isLoading: false });
+      set({ isLoadingUser: false });
       return { success: res.data.success, msg: res.data.msg };
 
     } catch (error: any) {
-      set({ isLoading: false });
+      set({ isLoadingUser: false });
       return { success: false, msg: `Erro: ${error.response?.data?.msg}` };
     }
   },
   verifyOTP: async (email: string, otp: string) => {
-    set({ isLoading: true });
+    set({ isLoadingUser: true });
 
     try {
       const res = await axios.get(`${API_URL}/api/otp/verify`, {
         params: { email, otp }
       });
 
-      set({ isLoading: false });
+      set({ isLoadingUser: false });
       return { success: res.data.success, msg: res.data.msg };
 
     } catch (error: any) {
-      set({ isLoading: false });
+      set({ isLoadingUser: false });
       return { success: false, msg: `Erro: ${error.response?.data?.msg}` };
     }
   },
   changePassword: async (email: string, newPassword: string) => {
-    set({ isLoading: true });
+    set({ isLoadingUser: true });
 
     try {
       const res = await axios.put(`${API_URL}/api/users/change-password`, { email, newPassword });
-      set({ isLoading: false });
+      set({ isLoadingUser: false });
       return { success: res.data.success, msg: res.data.msg };
 
     } catch (error: any) {
-      set({ isLoading: false });
+      set({ isLoadingUser: false });
       return { success: false, msg: `Erro: ${error.response?.data?.msg}` };
     }
   },
   loginWithGoogle: async (token: string) => {
-    set({ isLoading: true });
+    set({ isLoadingUser: true });
 
     try {
       localStorage.setItem("token", token);
@@ -120,12 +120,12 @@ export const useUserStore = create<UserStore>((set) => ({
       console.error(error);
       return ({ success: false, msg: "Erro ao logar com Google" })
     } finally {
-      set({isLoading: false});
+      set({isLoadingUser: false});
     }
   },
   logout: () => {
     localStorage.removeItem("token");
-    set({ user: null, token: "", isLoading: false });
+    set({ user: null, token: "", isLoadingUser: false });
     useRateStore.getState().setRates([]);
   },
 
