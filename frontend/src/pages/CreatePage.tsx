@@ -32,7 +32,7 @@ export const CreatePage = () => {
     }, 0) / rates.length;
 
   useEffect(() => {
-    if (!token) {
+    if (!token || !user) {
       navigate("/login");
     }
   }, [token, navigate]);

@@ -25,7 +25,7 @@ export const ProfilePage = () => {
     <Container maxW={"smxl"} py={12}>
       <VStack spacing={4}>
 
-        <VStack w={"5xl"} alignItems={"left"} p={8} spacing={10} bgColor={bgColorContainer}>
+        <VStack w={{base: "full", lg: "5xl"}} alignItems={"left"} p={8} spacing={10} bgColor={bgColorContainer}>
           <Text
             fontWeight={"bold"}
             bgGradient={"linear(to-r, red.500, red)"}

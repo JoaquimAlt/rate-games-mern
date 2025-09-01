@@ -1,4 +1,4 @@
-import { Box, HStack, Text, useColorModeValue, Heading, Menu, MenuButton, IconButton, MenuItem, MenuList, MenuDivider, useToast, useDisclosure, Avatar } from '@chakra-ui/react'
+import { Box, HStack, Text, useColorModeValue, Heading, Menu, MenuButton, IconButton, MenuItem, MenuList, MenuDivider, useToast, useDisclosure, Avatar, useBreakpointValue } from '@chakra-ui/react'
 import type IRate from '../types/Rate'
 import { FaStar } from 'react-icons/fa'
 import { VscKebabVertical } from "react-icons/vsc"
@@ -15,6 +15,8 @@ interface Props {
 }
 
 const RateExpanded = ({ rate, showimage = false }: Props) => {
+
+    const isMobile = useBreakpointValue({ base: true, md: false });
 
     const [updatedRate, setUpdatedRate] = useState(rate);
 
@@ -66,10 +68,16 @@ const RateExpanded = ({ rate, showimage = false }: Props) => {
             alignItems={"start"}
             w={"full"}
             minH={"180px"}
-            pb={8}
+            pb={10}
             gap={8}
             textAlign={"center"}
             overflow={"hidden"}
+            onClick={() => {
+                if (isMobile) {
+                    onOpen();
+                }
+            }}
+
         >
 
             <HStack display={"flex"} gap={"4px"} as={"h4"} flexDirection={"row"} position={"absolute"} bottom={2} right={3} fontSize={12}>
@@ -124,7 +132,7 @@ const RateExpanded = ({ rate, showimage = false }: Props) => {
             </Box>
 
             {isOwner &&
-                <Box position={"absolute"} right={0.5}>
+                <Box display={{ base: "none", md: "flex" }} position={"absolute"} right={0.5}>
                     <Menu>
                         <MenuButton as={IconButton} icon={<VscKebabVertical />} aria-label='Options' variant={"outline"} />
                         <MenuList>
