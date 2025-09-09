@@ -22,42 +22,82 @@ Rate Games MERN é uma aplicação full stack que permite que usuários avaliem 
 - **MongoDB** & **Mongoose** – Banco de dados NoSQL
 - **JWT (JSON Web Token)** – Autenticação e segurança
 - **bcryptjs** – Criptografia de senhas
+- **Nodemailer** - Envio código de recuperação de senha
+- **Google Auth** - Autenticação com conta google
 
 ### 💻 Frontend
 - **React.js** com **TypeScript**
 - **Chakra UI** – Componentes estilizados prontos e acessíveis
-- **Fetch** – Requisições HTTP
+- **Axios** – Requisições HTTP
 - **React Router** – Rotas protegidas e navegação
 
 ---
 
-# Previews do projeto
-## Home Page 🏠
-### Dark mode 🌙
-![home](https://github.com/user-attachments/assets/d905b412-5b79-4279-834f-a38cfdc0736b)
+## 🚀 Instalação e execução
 
-### Light mode ☀️
-![home-l](https://github.com/user-attachments/assets/c3b3bc58-6c42-4cb2-aba6-b8424b47b923)
+### 1. Clone o repositório
+```bash
+git clone https://github.com/seu-usuario/rategames-mern.git
+cd rategames-mern
+```
 
-### Section - Melhores pelo metacritics 🏆
-![home-s](https://github.com/user-attachments/assets/a412cd89-cfd0-49fc-84e9-5c2b40124b73)
+### 2. Instale as dependências
+```bash
+# do backend
+npm install
 
+# do frontend
+cd frontend
+npm install
+```
 
-## Profile Page 👤
-![profile](https://github.com/user-attachments/assets/1c12d385-602b-4b92-9ddb-e4f2b009796c)
+### 3. Rode a aplicação
+```bash
+# rodar ambos
+npm run dev
 
-## Login Page 🔐
-![login](https://github.com/user-attachments/assets/266c44eb-feeb-4719-84aa-70e5a98926db)
+# rodar individualmente
 
-## Register Page 📝
-![register]()
+# rodar frontend
+cd frontend
+npm run dev
 
+cd backend
+npm start
+```
+### 4. Variáveis de ambiente
+```bash
+# crie na pasta backend ou rate-games-mern
+.env
+MONGO_URI
+PORT
+JWT_SECRET
+JWT_EXPIRES_IN
+NODE_ENV
+SMPT_MAIL
+SMPT_APP_PASS
+SMPT_HOST
+SMPT_PORT
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+FRONTEND_URL
+SERVER_URL
 
+# crie na pasta frontend
+.env
+VITE_API_URL
+VITE_KEY_RAWG
+VITE_NOT_FOUND_IMG
+```
 
+### Home Page
+<img width="1916" height="904" alt="Image" src="https://github.com/user-attachments/assets/d1be6e4c-57b7-4db5-a4db-4eb9fb92162f" />
 
+### Create Page
+<img width="1916" height="904" alt="Image" src="https://github.com/user-attachments/assets/64e338ed-f3bc-42f3-8423-612da1336229" />
 
-
-
+### Login Page
+<img width="1916" height="904" alt="Image" src="https://github.com/user-attachments/assets/fa25d3bf-2cf0-4a43-a42a-44fb98f9808a" />
 
 
 
