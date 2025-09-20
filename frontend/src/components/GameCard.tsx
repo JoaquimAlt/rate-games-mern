@@ -34,6 +34,7 @@ const GameCard = ({ game }: Props) => {
                 gap={4}
                 onClick={() => handleSelect(game.id)}
                 borderRadius={5}
+                cursor="pointer
             >
                 <VStack alignItems={"flex-start"} p={5}>
                     <Text
